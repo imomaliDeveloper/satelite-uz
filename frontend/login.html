@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - SATELITE.UZ</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+
+  <div class="auth-wrapper">
+    <!-- Left: 3D Visual -->
+    <div class="auth-visual-side">
+      <div id="auth-canvas-container"></div>
+
+      <div class="auth-visual-header">
+        <a href="/" class="brand-logo">
+          <div class="brand-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-30 12 12)"></ellipse>
+            </svg>
+          </div>
+          <span>SATELITE<span class="text-cyan">.UZ</span></span>
+        </a>
+      </div>
+
+      <!-- Floating Badges -->
+      <div class="floating-badge floating-badge-1">
+        <span style="font-size: 1.4rem;">🎯</span>
+        <div>
+          <div style="font-weight: 700; font-size: 0.95rem;">Precision Analytics</div>
+          <div style="font-size: 0.8rem; color: var(--text-secondary);">Real-time mastery tracking</div>
+        </div>
+      </div>
+
+      <div class="floating-badge floating-badge-2">
+        <span style="font-size: 1.4rem;">🛰️</span>
+        <div>
+          <div style="font-weight: 700; font-size: 0.95rem;">Targeted Preparation</div>
+          <div style="font-size: 0.8rem; color: var(--text-secondary);">Timed full-length testing</div>
+        </div>
+      </div>
+
+      <div class="auth-visual-footer">
+        <blockquote class="auth-quote">"Consistent, targeted question practice is the single greatest predictor of exam excellence."</blockquote>
+        <div class="auth-author">SATELITE.UZ Cognitive Assessment Framework</div>
+      </div>
+    </div>
+
+    <!-- Right: Login Form -->
+    <div class="auth-form-side">
+      <div style="position: absolute; top: 24px; right: 24px;">
+        <button class="btn btn-ghost btn-icon theme-toggle-btn" aria-label="Toggle Theme" title="Toggle Theme" onclick="ThemeManager.toggle()">🌙</button>
+      </div>
+
+      <div class="auth-card">
+        <div class="auth-header">
+          <h2 class="auth-title">Welcome back</h2>
+          <p class="auth-subtitle">Enter your credentials to access your exam workspace.</p>
+        </div>
+
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address</label>
+            <input type="email" id="email" class="form-input" placeholder="student@gmail.com" required autocomplete="email">
+            <span class="form-error" id="email-error"></span>
+          </div>
+
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <label class="form-label" for="password" style="margin-bottom: 0;">Password</label>
+              <a href="/forgot-password.html" style="font-size: 0.82rem; color: var(--accent-primary);">Forgot password?</a>
+            </div>
+            <input type="password" id="password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+            <span class="form-error" id="password-error"></span>
+          </div>
+
+          <button type="submit" id="submit-btn" class="btn btn-primary" style="width: 100%; padding: 13px; font-size: 1rem; margin-top: 10px;">
+            Sign In
+          </button>
+        </form>
+
+        <div class="auth-footer-links">
+          Don't have an account yet? <a href="/register.html">Create one here</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="/js/toast.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/hero-3d.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+
+      // Explicitly wipe session if coming from logout action
+      if (urlParams.get('logout')) {
+        Auth.clearSession();
+        if (window.Toast) {
+          Toast.success('You have been logged out successfully.');
+        }
+      } else if (Auth.isAuthenticated()) {
+        // If already logged in, redirect
+        const user = Auth.getUser();
+        if (user?.role === 'ADMIN') {
+          window.location.href = '/admin/dashboard.html';
+        } else {
+          window.location.href = '/dashboard.html';
+        }
+        return;
+      }
+
+      // Initialize 3D Space Background
+      if (window.SateliteScene) {
+        new SateliteScene('auth-canvas-container', { isCompact: true });
+      }
+
+      // Check for expired session query param
+      if (urlParams.get('expired')) {
+        Toast.warning('Your session has expired. Please sign in again.');
+      }
+
+      const form = document.getElementById('login-form');
+      const emailInput = document.getElementById('email');
+      const passwordInput = document.getElementById('password');
+      const emailError = document.getElementById('email-error');
+      const passwordError = document.getElementById('password-error');
+      const submitBtn = document.getElementById('submit-btn');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        emailError.textContent = '';
+        passwordError.textContent = '';
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+
+        let hasError = false;
+        if (!email) {
+          emailError.textContent = 'Please enter your email address.';
+          hasError = true;
+        }
+        if (!password) {
+          passwordError.textContent = 'Please enter your password.';
+          hasError = true;
+        }
+
+        if (hasError) return;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Authenticating...';
+
+        try {
+          const res = await Auth.login(email, password);
+          Toast.success('Welcome back!');
+
+          const redirectParam = urlParams.get('redirect');
+          if (redirectParam) {
+            window.location.href = decodeURIComponent(redirectParam);
+          } else if (res.data?.user?.role === 'ADMIN') {
+            window.location.href = '/admin/dashboard.html';
+          } else {
+            window.location.href = '/dashboard.html';
+          }
+        } catch (err) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Sign In';
+          Toast.error(err.message || 'Invalid email or password.');
+          passwordError.textContent = err.message || 'Invalid credentials.';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

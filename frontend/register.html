@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account - SATELITE.UZ</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+
+  <div class="auth-wrapper">
+    <!-- Left: 3D Visual -->
+    <div class="auth-visual-side">
+      <div id="auth-canvas-container"></div>
+
+      <div class="auth-visual-header">
+        <a href="/" class="brand-logo">
+          <div class="brand-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-30 12 12)"></ellipse>
+            </svg>
+          </div>
+          <span>SATELITE<span class="text-cyan">.UZ</span></span>
+        </a>
+      </div>
+
+      <div class="floating-badge floating-badge-1">
+        <span style="font-size: 1.4rem;">🚀</span>
+        <div>
+          <div style="font-weight: 700; font-size: 0.95rem;">Join 1,000+ Students</div>
+          <div style="font-size: 0.8rem; color: var(--text-secondary);">Digital test excellence</div>
+        </div>
+      </div>
+
+      <div class="auth-visual-footer">
+        <blockquote class="auth-quote">"True mastery comes from understanding every mistake and building algorithmic confidence."</blockquote>
+        <div class="auth-author">SATELITE.UZ Examination Platform</div>
+      </div>
+    </div>
+
+    <!-- Right: Register Form -->
+    <div class="auth-form-side">
+      <div style="position: absolute; top: 24px; right: 24px;">
+        <button class="btn btn-ghost btn-icon theme-toggle-btn" aria-label="Toggle Theme" title="Toggle Theme" onclick="ThemeManager.toggle()">🌙</button>
+      </div>
+
+      <div class="auth-card">
+        <div class="auth-header">
+          <h2 class="auth-title">Create Account</h2>
+          <p class="auth-subtitle">Join SATELITE.UZ to access the question bank and start practicing.</p>
+        </div>
+
+        <form id="register-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="name">Full Name</label>
+            <input type="text" id="name" class="form-input" placeholder="e.g. Jasur Alimov" required autocomplete="name">
+            <span class="form-error" id="name-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address</label>
+            <input type="email" id="email" class="form-input" placeholder="jasur@gmail.com" required autocomplete="email">
+            <span class="form-error" id="email-error"></span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="password">Password</label>
+              <input type="password" id="password" class="form-input" placeholder="Min. 8 characters" required autocomplete="new-password">
+              <span class="form-error" id="password-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="confirmPassword">Confirm</label>
+              <input type="password" id="confirmPassword" class="form-input" placeholder="Repeat password" required autocomplete="new-password">
+              <span class="form-error" id="confirm-error"></span>
+            </div>
+          </div>
+
+          <button type="submit" id="submit-btn" class="btn btn-primary" style="width: 100%; padding: 13px; font-size: 1rem; margin-top: 10px;">
+            Create Free Account
+          </button>
+        </form>
+
+        <div class="auth-footer-links">
+          Already have an account? <a href="/login.html">Sign in here</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="/js/toast.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/hero-3d.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (Auth.isAuthenticated()) {
+        window.location.href = '/dashboard.html';
+        return;
+      }
+
+      if (window.SateliteScene) {
+        new SateliteScene('auth-canvas-container', { isCompact: true });
+      }
+
+      const form = document.getElementById('register-form');
+      const nameInput = document.getElementById('name');
+      const emailInput = document.getElementById('email');
+      const passwordInput = document.getElementById('password');
+      const confirmInput = document.getElementById('confirmPassword');
+      const nameError = document.getElementById('name-error');
+      const emailError = document.getElementById('email-error');
+      const passwordError = document.getElementById('password-error');
+      const confirmError = document.getElementById('confirm-error');
+      const submitBtn = document.getElementById('submit-btn');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        nameError.textContent = '';
+        emailError.textContent = '';
+        passwordError.textContent = '';
+        confirmError.textContent = '';
+
+        const name = nameInput.value.trim();
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+        const confirmPassword = confirmInput.value;
+
+        let hasError = false;
+        if (!name || name.length < 2) {
+          nameError.textContent = 'Name must be at least 2 characters.';
+          hasError = true;
+        }
+        if (!email || !email.includes('@')) {
+          emailError.textContent = 'Please enter a valid email address.';
+          hasError = true;
+        }
+        if (!password || password.length < 8) {
+          passwordError.textContent = 'Password must be at least 8 characters long.';
+          hasError = true;
+        }
+        if (password !== confirmPassword) {
+          confirmError.textContent = 'Passwords do not match.';
+          hasError = true;
+        }
+
+        if (hasError) return;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Creating Account...';
+
+        try {
+          await Auth.register(name, email, password, confirmPassword);
+          Toast.success('Account created successfully!');
+          setTimeout(() => {
+            window.location.href = '/dashboard.html';
+          }, 800);
+        } catch (err) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Create Free Account';
+          Toast.error(err.message || 'Registration failed.');
+          if (err.details && Array.isArray(err.details)) {
+            err.details.forEach(d => {
+              if (d.field === 'email') emailError.textContent = d.message;
+              if (d.field === 'password') passwordError.textContent = d.message;
+              if (d.field === 'confirmPassword') confirmError.textContent = d.message;
+            });
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

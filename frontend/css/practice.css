@@ -1,0 +1,204 @@
+/* ==========================================================================
+   SATELITE.UZ - Practice & Exam Mode Styles
+   ========================================================================== */
+
+.practice-page {
+  padding-top: 96px;
+  padding-bottom: 80px;
+  min-height: 100vh;
+}
+
+.practice-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Practice Header & Badges */
+.practice-meta-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.practice-badges {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.question-counter {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--accent-cyan);
+}
+
+.practice-card {
+  padding: 36px;
+  margin-bottom: 24px;
+  border: 1px solid var(--border-medium);
+}
+
+.question-content {
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.6;
+  margin-bottom: 28px;
+  color: var(--text-primary);
+}
+
+.question-image-wrap {
+  margin-bottom: 24px;
+  text-align: center;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  max-height: 380px;
+}
+
+.question-image-wrap img {
+  max-height: 380px;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+}
+
+/* Answer Choices */
+.options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+.option-choice {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background-color: var(--bg-surface-elevated);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.option-choice * {
+  pointer-events: none;
+}
+
+.option-choice:hover:not(.disabled) {
+  border-color: var(--accent-primary);
+  background-color: rgba(99, 102, 241, 0.08);
+  transform: translateX(4px);
+}
+
+.option-choice.selected {
+  border-color: var(--accent-primary);
+  background-color: rgba(99, 102, 241, 0.15);
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.option-choice.correct {
+  border-color: var(--success) !important;
+  background-color: var(--success-bg) !important;
+}
+
+.option-choice.incorrect {
+  border-color: var(--danger) !important;
+  background-color: var(--danger-bg) !important;
+}
+
+.option-choice.disabled {
+  cursor: default;
+}
+
+.option-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--border-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+  background: var(--bg-surface);
+  transition: all var(--transition-fast);
+}
+
+.option-choice.selected .option-badge {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: #ffffff;
+}
+
+.option-choice.correct .option-badge {
+  background: var(--success);
+  border-color: var(--success);
+  color: #ffffff;
+}
+
+.option-choice.incorrect .option-badge {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #ffffff;
+}
+
+.option-text {
+  font-size: 1.05rem;
+  font-weight: 500;
+  flex: 1;
+}
+
+/* Explanation Box */
+.explanation-card {
+  padding: 24px;
+  border-radius: var(--radius-md);
+  margin-top: 24px;
+  animation: fadeIn 0.3s ease-in-out;
+  border: 1px solid var(--border-medium);
+}
+
+.explanation-card.correct-box {
+  background: var(--success-bg);
+  border-color: var(--success-border);
+}
+
+.explanation-card.incorrect-box {
+  background: var(--danger-bg);
+  border-color: var(--danger-border);
+}
+
+.explanation-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.explanation-body {
+  font-size: 0.98rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Practice Actions Bar */
+.practice-footer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}

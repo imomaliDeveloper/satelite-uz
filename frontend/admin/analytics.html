@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Platform Analytics - SATELITE.UZ Admin</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="admin-sidebar-nav"></aside>
+
+    <main class="admin-main">
+      <div class="admin-top-bar">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <button id="sidebar-toggle-btn" class="btn btn-icon btn-secondary mobile-sidebar-toggle">☰</button>
+          <div>
+            <h1 class="admin-page-title">Diagnostic & Learning Analytics</h1>
+            <p class="text-secondary" style="font-size: 0.95rem;">Examine platform-wide difficulty curves and question drop-off rates.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subject & Difficulty Distributions Grid -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 32px;">
+        <div class="card" style="padding: 24px;">
+          <h3 style="font-size: 1.15rem; margin-bottom: 16px;">Questions by Subject</h3>
+          <div id="subject-distribution-list" style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="skeleton" style="height: 36px;"></div>
+            <div class="skeleton" style="height: 36px;"></div>
+          </div>
+        </div>
+
+        <div class="card" style="padding: 24px;">
+          <h3 style="font-size: 1.15rem; margin-bottom: 16px;">Difficulty Distribution</h3>
+          <div id="difficulty-distribution-list" style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="skeleton" style="height: 36px;"></div>
+            <div class="skeleton" style="height: 36px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Most Difficult Topics -->
+      <div class="card" style="padding: 28px; margin-bottom: 32px;">
+        <h3 style="font-size: 1.15rem; margin-bottom: 16px;">Most Challenging Topics (Lowest Accuracy)</h3>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Topic Name</th>
+              <th>Parent Subject</th>
+              <th>Total Questions</th>
+              <th>Student Attempts</th>
+              <th>Average Accuracy</th>
+            </tr>
+          </thead>
+          <tbody id="difficult-topics-tbody">
+            <tr>
+              <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                Calculating topic accuracy analytics...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Most Missed Questions -->
+      <div class="card" style="padding: 28px;">
+        <h3 style="font-size: 1.15rem; margin-bottom: 16px;">Most Missed Questions (Highest Incorrect Rate)</h3>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Question Snippet</th>
+              <th>Subject</th>
+              <th>Difficulty</th>
+              <th>Attempts</th>
+              <th>Miss Rate</th>
+            </tr>
+          </thead>
+          <tbody id="missed-questions-tbody">
+            <tr>
+              <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                Analyzing question error frequencies...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="/js/toast.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin/admin.js"></script>
+  <script src="/js/admin/analytics.js"></script>
+</body>
+</html>

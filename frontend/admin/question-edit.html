@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Question - SATELITE.UZ Admin</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/practice.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="admin-sidebar-nav"></aside>
+
+    <main class="admin-main">
+      <div class="admin-top-bar">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <button id="sidebar-toggle-btn" class="btn btn-icon btn-secondary mobile-sidebar-toggle">☰</button>
+          <div>
+            <h1 class="admin-page-title" id="form-heading">Edit Question</h1>
+            <p class="text-secondary" style="font-size: 0.95rem;">Modify options, explanation, difficulty, or question prompt.</p>
+          </div>
+        </div>
+
+        <a href="/admin/questions.html" class="btn btn-outline btn-sm">← Back to Questions</a>
+      </div>
+
+      <div class="editor-layout">
+        <div class="card" style="padding: 32px;">
+          <form id="question-form" enctype="multipart/form-data">
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="form-subject">Subject *</label>
+                <select id="form-subject" class="form-select" required>
+                  <option value="">Select Subject</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="form-topic">Topic *</label>
+                <select id="form-topic" class="form-select" required>
+                  <option value="">Select Topic</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="form-difficulty">Difficulty *</label>
+                <select id="form-difficulty" class="form-select" required>
+                  <option value="EASY">Easy</option>
+                  <option value="MEDIUM">Medium</option>
+                  <option value="HARD">Hard</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="form-type">Question Type *</label>
+                <select id="form-type" class="form-select" required>
+                  <option value="MULTIPLE_CHOICE">Multiple Choice</option>
+                  <option value="MULTI_SELECT">Multi-Select</option>
+                  <option value="TRUE_FALSE">True / False</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="form-text">Question Prompt *</label>
+              <textarea id="form-text" class="form-textarea" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="form-image">Replace Diagram / Image Asset</label>
+              <input type="file" id="form-image" class="form-input" accept="image/png, image/jpeg, image/jpg, image/webp">
+              <div id="current-image-preview" style="margin-top: 8px; display: none;">
+                <span class="text-secondary" style="font-size: 0.85rem;">Current image:</span>
+                <img id="current-img-tag" src="" style="max-height: 80px; display: block; border-radius: 6px; margin-top: 4px;">
+              </div>
+            </div>
+
+            <div style="margin: 28px 0 20px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <label class="form-label" style="font-size: 1rem; margin-bottom: 0;">Answer Choices & Correct Key *</label>
+                <span style="font-size: 0.82rem; color: var(--accent-cyan);">Select radio button for the correct answer</span>
+              </div>
+
+              <div id="options-inputs-container" style="display: flex; flex-direction: column; gap: 14px;">
+                <div class="card" style="padding: 14px; background: var(--bg-surface-elevated); display: flex; align-items: center; gap: 12px;">
+                  <input type="radio" name="correctChoice" value="A" id="correct-A" checked style="cursor: pointer; width: 18px; height: 18px;">
+                  <span style="font-weight: 800; width: 24px;">A:</span>
+                  <input type="text" class="form-input opt-input" data-label="A" required>
+                </div>
+
+                <div class="card" style="padding: 14px; background: var(--bg-surface-elevated); display: flex; align-items: center; gap: 12px;">
+                  <input type="radio" name="correctChoice" value="B" id="correct-B" style="cursor: pointer; width: 18px; height: 18px;">
+                  <span style="font-weight: 800; width: 24px;">B:</span>
+                  <input type="text" class="form-input opt-input" data-label="B" required>
+                </div>
+
+                <div class="card" style="padding: 14px; background: var(--bg-surface-elevated); display: flex; align-items: center; gap: 12px;">
+                  <input type="radio" name="correctChoice" value="C" id="correct-C" style="cursor: pointer; width: 18px; height: 18px;">
+                  <span style="font-weight: 800; width: 24px;">C:</span>
+                  <input type="text" class="form-input opt-input" data-label="C" required>
+                </div>
+
+                <div class="card" style="padding: 14px; background: var(--bg-surface-elevated); display: flex; align-items: center; gap: 12px;">
+                  <input type="radio" name="correctChoice" value="D" id="correct-D" style="cursor: pointer; width: 18px; height: 18px;">
+                  <span style="font-weight: 800; width: 24px;">D:</span>
+                  <input type="text" class="form-input opt-input" data-label="D" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="form-explanation">Detailed Solution / Explanation</label>
+              <textarea id="form-explanation" class="form-textarea" rows="3"></textarea>
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-bottom: 28px;">
+              <input type="checkbox" id="form-published" checked style="width: 18px; height: 18px; cursor: pointer;">
+              <label for="form-published" style="font-size: 0.95rem; font-weight: 600; cursor: pointer; user-select: none;">
+                Published to Question Bank
+              </label>
+            </div>
+
+            <button type="submit" id="form-submit-btn" class="btn btn-primary btn-lg" style="width: 100%;">
+              Save Changes
+            </button>
+          </form>
+        </div>
+
+        <div class="preview-sticky">
+          <div class="preview-card-wrap">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <span style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--accent-cyan); letter-spacing: 0.05em;">
+                Live Student Preview
+              </span>
+              <span class="badge badge-medium" id="preview-diff-badge">MEDIUM</span>
+            </div>
+
+            <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+              <span class="badge badge-subject" id="preview-sub-badge">Subject</span>
+              <span class="badge badge-topic" id="preview-topic-badge">Topic</span>
+            </div>
+
+            <div id="preview-question-text" style="font-size: 1.15rem; font-weight: 500; line-height: 1.5; margin-bottom: 20px;">
+              Question prompt preview...
+            </div>
+
+            <div id="preview-options-list" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;"></div>
+
+            <div class="explanation-card" style="background: var(--bg-surface-elevated); margin-top: 16px;">
+              <div class="explanation-title" style="color: var(--accent-primary); font-size: 0.95rem;">
+                <span>💡 Solution Preview</span>
+              </div>
+              <div class="explanation-body" id="preview-explanation" style="font-size: 0.88rem;">
+                Explanation will appear here...
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/toast.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin/admin.js"></script>
+  <script src="/js/admin/question-form.js"></script>
+</body>
+</html>

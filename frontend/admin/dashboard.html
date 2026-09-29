@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - SATELITE.UZ</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+
+  <div class="admin-layout">
+    <!-- Sidebar (Injected) -->
+    <aside class="admin-sidebar" id="admin-sidebar-nav"></aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <!-- Top Bar -->
+      <div class="admin-top-bar">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <button id="sidebar-toggle-btn" class="btn btn-icon btn-secondary mobile-sidebar-toggle">☰</button>
+          <div>
+            <h1 class="admin-page-title">Operations Command Center</h1>
+            <p class="text-secondary" style="font-size: 0.95rem;">Real-time platform telemetry and content controls.</p>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <button class="btn btn-icon theme-toggle-btn" aria-label="Toggle theme">🌙</button>
+          <a href="/admin/question-create.html" class="btn btn-primary btn-sm">➕ Create Question</a>
+        </div>
+      </div>
+
+      <!-- KPI Grid 1: Content Metrics -->
+      <div style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.05em;">
+        Repository & Content Metrics
+      </div>
+      <div class="kpi-grid" style="margin-bottom: 32px;">
+        <div class="card kpi-card">
+          <div class="kpi-icon-wrap" style="color: var(--accent-primary);">📝</div>
+          <div class="kpi-data">
+            <div class="kpi-val" id="stat-total-questions">0</div>
+            <div class="kpi-lbl">Total Questions</div>
+          </div>
+        </div>
+
+        <div class="card kpi-card">
+          <div class="kpi-icon-wrap" style="color: var(--accent-cyan);">📚</div>
+          <div class="kpi-data">
+            <div class="kpi-val" id="stat-total-subjects">0</div>
+            <div class="kpi-lbl">Subjects Configured</div>
+          </div>
+        </div>
+
+        <div class="card kpi-card">
+          <div class="kpi-icon-wrap" style="color: #a5b4fc;">🏷️</div>
+          <div class="kpi-data">
+            <div class="kpi-val" id="stat-total-topics">0</div>
+            <div class="kpi-lbl">Granular Topics</div>
+          </div>
+        </div>
+
+        <div class="card kpi-card">
+          <div class="kpi-icon-wrap" style="color: #f59e0b;">⏱️</div>
+          <div class="kpi-data">
+            <div class="kpi-val" id="stat-total-exams">0</div>
+            <div class="kpi-lbl">Published Exams</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI Grid 2: Platform & Student Health -->
+      <div style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.05em;">
+        User Engagement & Performance
+      </div>
+      <div class="kpi-grid" style="margin-bottom: 36px;">
+        <div class="card kpi-card">
+          <div class="kpi-icon-wrap" style="color: #10b981;">👥</div>
+          <div class="kpi-data">
+            <div class="kpi-val" id="stat-total-users">0</div>
+            <div class="kpi-lbl">Total Users</div>
+          </div>
+        </div>
+
+        <div class="card kpi-card">
+          <div class="kpi-icon-wrap" style="color: var(--accent-cyan);">⚡</div>
+          <div class="kpi-data">
+            <div class="kpi-val" id="stat-active-students">0</div>
+            <div class="kpi-lbl">Active Students</div>
+          </div>
+        </div>
+
+        <div class="card kpi-card">
+          <div class="kpi-icon-wrap" style="color: #6366f1;">📅</div>
+          <div class="kpi-data">
+            <div class="kpi-val" id="stat-added-today">0</div>
+            <div class="kpi-lbl">Questions Added Today</div>
+          </div>
+        </div>
+
+        <div class="card kpi-card">
+          <div class="kpi-icon-wrap" style="color: #10b981;">🎯</div>
+          <div class="kpi-data">
+            <div class="kpi-val" id="stat-platform-accuracy">0%</div>
+            <div class="kpi-lbl">Platform Avg Accuracy</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity Feed -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 36px;">
+        <!-- Recent Questions Added -->
+        <div class="card" style="padding: 24px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+            <h3 style="font-size: 1.15rem; font-weight: 700;">Recently Added Questions</h3>
+            <a href="/admin/questions.html" class="btn btn-sm btn-outline">View All</a>
+          </div>
+          <div id="recent-questions-list" style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="skeleton" style="height: 48px;"></div>
+            <div class="skeleton" style="height: 48px;"></div>
+          </div>
+        </div>
+
+        <!-- Recent Student Exam Sessions -->
+        <div class="card" style="padding: 24px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+            <h3 style="font-size: 1.15rem; font-weight: 700;">Recent Completed Sessions</h3>
+            <a href="/admin/analytics.html" class="btn btn-sm btn-outline">View Telemetry</a>
+          </div>
+          <div id="recent-sessions-list" style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="skeleton" style="height: 48px;"></div>
+            <div class="skeleton" style="height: 48px;"></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="/js/toast.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin/admin.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      document.getElementById('admin-sidebar-nav').innerHTML = getSidebarHtml('dashboard');
+
+      try {
+        const res = await API.get('/admin/stats');
+        const stats = res.data;
+
+        document.getElementById('stat-total-questions').textContent = stats.totalQuestions;
+        document.getElementById('stat-total-subjects').textContent = stats.totalSubjects;
+        document.getElementById('stat-total-topics').textContent = stats.totalTopics;
+        document.getElementById('stat-total-exams').textContent = stats.totalExams;
+
+        document.getElementById('stat-total-users').textContent = stats.totalUsers;
+        document.getElementById('stat-active-students').textContent = stats.activeStudents;
+        document.getElementById('stat-added-today').textContent = stats.questionsAddedToday;
+        document.getElementById('stat-platform-accuracy').textContent = `${stats.avgPlatformAccuracy}%`;
+
+        // Render Recent Questions
+        const qList = document.getElementById('recent-questions-list');
+        const questions = stats.recentActivity?.recentQuestions || [];
+        if (questions.length === 0) {
+          qList.innerHTML = '<p class="text-muted">No questions created yet.</p>';
+        } else {
+          qList.innerHTML = questions.map(q => `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--bg-surface-elevated); border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+              <div style="max-width: 75%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.92rem;">
+                ${q.questionText}
+              </div>
+              <span class="badge badge-${q.difficulty.toLowerCase()}">${q.difficulty}</span>
+            </div>
+          `).join('');
+        }
+
+        // Render Recent Sessions
+        const sList = document.getElementById('recent-sessions-list');
+        const sessions = stats.recentActivity?.recentSessions || [];
+        if (sessions.length === 0) {
+          sList.innerHTML = '<p class="text-muted">No student sessions recorded yet.</p>';
+        } else {
+          sList.innerHTML = sessions.map(s => `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--bg-surface-elevated); border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+              <div>
+                <div style="font-weight: 600; font-size: 0.92rem;">${s.user?.name || 'Student'}</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">${s.mode} Assessment</div>
+              </div>
+              <span style="font-weight: 800; color: ${s.score >= 70 ? '#10b981' : '#f59e0b'};">${Math.round(s.score)}%</span>
+            </div>
+          `).join('');
+        }
+      } catch (err) {
+        Toast.error(err.message || 'Error fetching admin stats.');
+      }
+    });
+  </script>
+</body>
+</html>
