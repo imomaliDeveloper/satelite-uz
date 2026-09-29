@@ -3,14 +3,13 @@ import bcrypt from 'bcryptjs';
 import { INIT_SQL } from './initSql.js';
 
 export async function runInitDb() {
-  const rawSql = INIT_SQL;
+  // Remove all line comments (-- ...)
+  const cleanSql = INIT_SQL.replace(/--.*$/gm, '');
 
-  // Split into individual SQL commands by semicolon
-  // Filter out empty lines or pure comments
-  const statements = rawSql
+  const statements = cleanSql
     .split(';')
     .map(s => s.trim())
-    .filter(s => s.length > 0 && !s.startsWith('--'));
+    .filter(s => s.length > 0);
 
   console.log(`[InitDB] Executing ${statements.length} SQL statements...`);
 
