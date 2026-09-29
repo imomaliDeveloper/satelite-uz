@@ -44,7 +44,11 @@ const ThemeManager = (() => {
     window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: targetTheme } }));
   }
 
+  let lastToggleTime = 0;
   function toggle() {
+    const now = Date.now();
+    if (now - lastToggleTime < 350) return; // Prevent double firing from inline onclick + event delegation
+    lastToggleTime = now;
     const current = getCurrent();
     const next = (current === 'dark') ? 'light' : 'dark';
     applyTheme(next);

@@ -42,6 +42,40 @@ export async function runInitDb() {
     }
   });
 
+  const asilbekHash = await bcrypt.hash('Asilbek1212', 10);
+
+  await prisma.user.upsert({
+    where: { email: 'asilbekumrkulov@gmail.com' },
+    update: {
+      password: asilbekHash,
+      role: 'ADMIN',
+      isActive: true
+    },
+    create: {
+      name: 'Asilbek Umrkulov',
+      email: 'asilbekumrkulov@gmail.com',
+      password: asilbekHash,
+      role: 'ADMIN',
+      isActive: true
+    }
+  });
+
+  await prisma.user.upsert({
+    where: { email: 'asilbekumurkulov@gmail.com' },
+    update: {
+      password: asilbekHash,
+      role: 'ADMIN',
+      isActive: true
+    },
+    create: {
+      name: 'Asilbek Umurkulov',
+      email: 'asilbekumurkulov@gmail.com',
+      password: asilbekHash,
+      role: 'ADMIN',
+      isActive: true
+    }
+  });
+
   await prisma.user.upsert({
     where: { email: 'student@satelite.uz' },
     update: {},
