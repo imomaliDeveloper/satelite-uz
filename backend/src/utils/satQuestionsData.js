@@ -5,7 +5,7 @@
  *          Reading & Writing (Information & Ideas, Craft & Structure, Expression of Ideas, Conventions)
  */
 
-export const SAT_EXPANDED_QUESTIONS = [
+const SAT_INITIAL_40_QUESTIONS = [
   // ==========================================
   // MATHEMATICS - ALGEBRA (5 Questions)
   // ==========================================
@@ -637,4 +637,11 @@ export const SAT_EXPANDED_QUESTIONS = [
       { optionLabel: 'D', optionText: 'energy: however', isCorrect: false }
     ]
   }
+];
+
+import { ADDITIONAL_60_SAT_QUESTIONS } from './massiveSatData.js';
+
+export const SAT_EXPANDED_QUESTIONS = [
+  ...SAT_INITIAL_40_QUESTIONS,
+  ...ADDITIONAL_60_SAT_QUESTIONS
 ];

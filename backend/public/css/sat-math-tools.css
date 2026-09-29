@@ -651,6 +651,59 @@
   color: #ffffff;
 }
 
+/* Demo Problem & Solution inside Reference Sheet */
+.sat-formula-demo {
+  margin-top: 8px;
+  background: rgba(14, 165, 233, 0.05);
+  border: 1px dashed rgba(14, 165, 233, 0.25);
+  border-radius: var(--radius-sm, 6px);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.sat-formula-demo[open] {
+  background: rgba(14, 165, 233, 0.09);
+  border-color: rgba(14, 165, 233, 0.45);
+}
+
+.sat-demo-summary {
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #38bdf8;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sat-demo-summary:hover {
+  color: #7dd3fc;
+}
+
+.sat-demo-body {
+  padding: 8px 12px 10px;
+  border-top: 1px solid rgba(14, 165, 233, 0.15);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sat-demo-question {
+  color: var(--text-primary, #ffffff);
+}
+
+.sat-demo-solution {
+  color: #a7f3d0;
+  background: rgba(16, 185, 129, 0.08);
+  padding: 6px 8px;
+  border-radius: 4px;
+  border-left: 3px solid #10b981;
+}
+
 /* ========================================================
    4. RESPONSIVENESS & ACCESSIBILITY
    ======================================================== */

@@ -40,7 +40,7 @@ export async function ensureDbColumns(force = false) {
       // Check if questions need seeding
       try {
         const qCount = await prisma.question.count();
-        if (qCount < 20) {
+        if (qCount < 80) {
           console.log(`[Database] Found ${qCount} questions, auto-seeding expanded SAT question bank...`);
           const { seedExpandedQuestions } = await import('../utils/seedQuestions.js');
           await seedExpandedQuestions();
