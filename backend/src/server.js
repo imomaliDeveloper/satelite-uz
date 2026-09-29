@@ -121,8 +121,10 @@ app.get('/api/setup/sync-database', async (req, res) => {
   }
   try {
     const { runInitDb } = await import('./utils/initDb.js');
+    const { seedExpandedQuestions } = await import('./utils/seedQuestions.js');
     const result = await runInitDb();
-    return res.json({ success: true, ...result });
+    const seedResult = await seedExpandedQuestions();
+    return res.json({ success: true, ...result, seeded: seedResult });
   } catch (err) {
     return res.status(500).json({ success: false, error: err.message, stack: err.stack });
   }
