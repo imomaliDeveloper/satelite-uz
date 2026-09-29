@@ -1,4 +1,4 @@
-import prisma from '../prisma.js';
+import prisma from '../config/db.js';
 import bcrypt from 'bcryptjs';
 import { INIT_SQL } from './initSql.js';
 
