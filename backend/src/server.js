@@ -103,16 +103,19 @@ app.get('/api/health', (req, res) => {
 
 // Serve frontend static files
 const frontendPath = path.resolve(__dirname, '../../frontend');
-if (fs.existsSync(frontendPath)) {
-  app.use(express.static(frontendPath));
+const publicPath = path.resolve(__dirname, '../../public');
+const staticPath = fs.existsSync(publicPath) ? publicPath : frontendPath;
+
+if (fs.existsSync(staticPath)) {
+  app.use(express.static(staticPath));
 
   // Client-side fallback for pretty routes or landing page
   app.get('/', (req, res) => {
-    res.sendFile(path.join(frontendPath, 'index.html'));
+    res.sendFile(path.join(staticPath, 'index.html'));
   });
 
   app.get('/admin', (req, res) => {
-    res.sendFile(path.join(frontendPath, 'admin/index.html'));
+    res.sendFile(path.join(staticPath, 'admin/index.html'));
   });
 }
 

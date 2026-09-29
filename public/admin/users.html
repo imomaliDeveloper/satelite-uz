@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User & Role Governance - SATELITE.UZ Admin</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="admin-sidebar-nav"></aside>
+
+    <main class="admin-main">
+      <div class="admin-top-bar">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <button id="sidebar-toggle-btn" class="btn btn-icon btn-secondary mobile-sidebar-toggle">☰</button>
+          <div>
+            <h1 class="admin-page-title">User Accounts & Governance</h1>
+            <p class="text-secondary" style="font-size: 0.95rem;">Manage platform credentials, roles, and account statuses.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <!-- Toolbar -->
+        <div class="table-toolbar">
+          <div class="table-search-box">
+            <span>🔍</span>
+            <input type="text" id="users-search" placeholder="Search user name or email...">
+          </div>
+
+          <div class="table-filters">
+            <select id="users-role-filter" class="form-select" style="width: auto;">
+              <option value="">All Roles</option>
+              <option value="STUDENT">Student</option>
+              <option value="ADMIN">Admin</option>
+            </select>
+
+            <select id="users-status-filter" class="form-select" style="width: auto;">
+              <option value="">All Statuses</option>
+              <option value="active">Active</option>
+              <option value="false">Deactivated</option>
+            </select>
+          </div>
+        </div>
+
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>User Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Joined</th>
+              <th>Last Active</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody">
+            <tr>
+              <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 40px;">
+                Loading registered accounts...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pagination" id="users-pagination">
+          <div class="text-secondary" style="font-size: 0.88rem;" id="users-pagination-text"></div>
+          <div style="display: flex; gap: 8px;">
+            <button id="users-prev-btn" class="btn btn-sm btn-outline">Previous</button>
+            <button id="users-next-btn" class="btn btn-sm btn-outline">Next</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/toast.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin/admin.js"></script>
+  <script src="/js/admin/users.js"></script>
+</body>
+</html>

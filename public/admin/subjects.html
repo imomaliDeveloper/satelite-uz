@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Subjects - SATELITE.UZ Admin</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="admin-sidebar-nav"></aside>
+
+    <main class="admin-main">
+      <div class="admin-top-bar">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <button id="sidebar-toggle-btn" class="btn btn-icon btn-secondary mobile-sidebar-toggle">☰</button>
+          <div>
+            <h1 class="admin-page-title">Subjects Configuration</h1>
+            <p class="text-secondary" style="font-size: 0.95rem;">Manage core academic domains (e.g. Mathematics, Reading & Writing).</p>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm" onclick="openSubjectModal()">➕ Add Subject</button>
+      </div>
+
+      <div class="table-container">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Slug</th>
+              <th>Description</th>
+              <th>Topics Count</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="subjects-tbody">
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 40px;">
+                Loading subjects...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- Subject Modal (Create / Edit) -->
+  <div class="modal-backdrop" id="subject-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="subject-modal-title">Add Subject</h3>
+        <button onclick="closeSubjectModal()" style="font-size: 1.5rem; color: var(--text-muted);">×</button>
+      </div>
+      <form id="subject-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="sub-name">Subject Name *</label>
+            <input type="text" id="sub-name" class="form-input" placeholder="e.g. Mathematics" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="sub-slug">URL Slug *</label>
+            <input type="text" id="sub-slug" class="form-input" placeholder="e.g. math" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="sub-desc">Description</label>
+            <textarea id="sub-desc" class="form-textarea" rows="2" placeholder="Brief subject summary..."></textarea>
+          </div>
+          <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" id="sub-active" checked style="width: 18px; height: 18px;">
+            <label for="sub-active" style="font-size: 0.9rem; font-weight: 600;">Active</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeSubjectModal()">Cancel</button>
+          <button type="submit" id="sub-submit-btn" class="btn btn-primary">Save Subject</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/toast.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin/admin.js"></script>
+  <script src="/js/admin/subjects.js"></script>
+</body>
+</html>

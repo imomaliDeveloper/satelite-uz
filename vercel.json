@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "outputDirectory": "frontend",
   "buildCommand": "node backend/prisma/prepare-db.js && prisma generate --schema=backend/prisma/schema.prisma",
   "rewrites": [
     {

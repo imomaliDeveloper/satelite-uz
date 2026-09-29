@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Questions - SATELITE.UZ Admin</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="admin-sidebar-nav"></aside>
+
+    <main class="admin-main">
+      <div class="admin-top-bar">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <button id="sidebar-toggle-btn" class="btn btn-icon btn-secondary mobile-sidebar-toggle">☰</button>
+          <div>
+            <h1 class="admin-page-title">Question Bank Repository</h1>
+            <p class="text-secondary" style="font-size: 0.95rem;">Review, edit, publish, or purge examination items.</p>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <a href="/admin/settings.html" class="btn btn-outline btn-sm">📥 Bulk Import CSV</a>
+          <a href="/admin/question-create.html" class="btn btn-primary btn-sm">➕ Add New Question</a>
+        </div>
+      </div>
+
+      <!-- Table Card -->
+      <div class="table-container">
+        <!-- Toolbar -->
+        <div class="table-toolbar">
+          <div class="table-search-box">
+            <span>🔍</span>
+            <input type="text" id="admin-q-search" placeholder="Search questions...">
+          </div>
+
+          <div class="table-filters">
+            <select id="admin-sub-filter" class="form-select" style="width: auto;">
+              <option value="">All Subjects</option>
+            </select>
+
+            <select id="admin-diff-filter" class="form-select" style="width: auto;">
+              <option value="">All Difficulties</option>
+              <option value="EASY">Easy</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="HARD">Hard</option>
+            </select>
+
+            <select id="admin-pub-filter" class="form-select" style="width: auto;">
+              <option value="">All Statuses</option>
+              <option value="true">Published</option>
+              <option value="false">Unpublished Draft</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div style="overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th style="width: 45%;">Question Text</th>
+                <th>Subject & Topic</th>
+                <th>Difficulty</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-questions-tbody">
+              <tr>
+                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 40px;">
+                  Loading repository items...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="admin-pagination">
+          <div class="text-secondary" style="font-size: 0.88rem;" id="admin-pagination-text">
+            Showing items
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button id="admin-prev-btn" class="btn btn-sm btn-outline">Previous</button>
+            <button id="admin-next-btn" class="btn btn-sm btn-outline">Next</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-backdrop" id="delete-q-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Delete Question</h3>
+        <button onclick="closeDeleteModal()" style="font-size: 1.5rem; color: var(--text-muted);">×</button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to permanently delete this question? This action will remove it from future exams and cannot be undone.
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+        <button class="btn btn-danger" id="confirm-delete-btn">Permanently Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/toast.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin/admin.js"></script>
+  <script src="/js/admin/questions.js"></script>
+</body>
+</html>
