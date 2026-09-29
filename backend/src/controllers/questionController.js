@@ -1,4 +1,4 @@
-import prisma from '../config/db.js';
+import prisma, { ensureDbColumns } from '../config/db.js';
 
 export const listQuestions = async (req, res, next) => {
   try {
@@ -44,7 +44,7 @@ export const listQuestions = async (req, res, next) => {
       orderBy = { difficulty: 'asc' };
     }
 
-    const [total, questions] = await Promise.all([
+    const queryQuestions = () => Promise.all([
       prisma.question.count({ where }),
       prisma.question.findMany({
         where,
@@ -73,6 +73,19 @@ export const listQuestions = async (req, res, next) => {
         }
       })
     ]);
+
+    let total, questions;
+    try {
+      [total, questions] = await queryQuestions();
+    } catch (dbErr) {
+      if (dbErr.message && (dbErr.message.includes('calculatorAllowed') || dbErr.message.includes('referenceSheetAllowed') || dbErr.message.includes('column'))) {
+        console.warn('[QuestionController] Missing column detected. Syncing DB columns and retrying...');
+        await ensureDbColumns(true);
+        [total, questions] = await queryQuestions();
+      } else {
+        throw dbErr;
+      }
+    }
 
     // If student is logged in, attach isBookmarked flag
     let bookmarkedQuestionIds = new Set();
@@ -114,7 +127,7 @@ export const getQuestionById = async (req, res, next) => {
     const { id } = req.params;
     const isAdmin = req.user?.role === 'ADMIN';
 
-    const question = await prisma.question.findUnique({
+    const queryQuestion = () => prisma.question.findUnique({
       where: { id },
       include: {
         subject: { select: { id: true, name: true, slug: true } },
@@ -133,6 +146,19 @@ export const getQuestionById = async (req, res, next) => {
         }
       }
     });
+
+    let question;
+    try {
+      question = await queryQuestion();
+    } catch (dbErr) {
+      if (dbErr.message && (dbErr.message.includes('calculatorAllowed') || dbErr.message.includes('referenceSheetAllowed') || dbErr.message.includes('column'))) {
+        console.warn('[QuestionController] Missing column detected in getQuestionById. Syncing DB columns and retrying...');
+        await ensureDbColumns(true);
+        question = await queryQuestion();
+      } else {
+        throw dbErr;
+      }
+    }
 
     if (!question) {
       return res.status(404).json({

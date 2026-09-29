@@ -1,11 +1,11 @@
-import prisma from '../config/db.js';
+import prisma, { ensureDbColumns } from '../config/db.js';
 
 export const listExams = async (req, res, next) => {
   try {
     const isAdmin = req.user?.role === 'ADMIN';
     const where = isAdmin ? {} : { isPublished: true };
 
-    const exams = await prisma.exam.findMany({
+    const queryExams = () => prisma.exam.findMany({
       where,
       orderBy: { createdAt: 'desc' },
       include: {
@@ -28,6 +28,19 @@ export const listExams = async (req, res, next) => {
         }
       }
     });
+
+    let exams;
+    try {
+      exams = await queryExams();
+    } catch (dbErr) {
+      if (dbErr.message && (dbErr.message.includes('calculatorAllowed') || dbErr.message.includes('referenceSheetAllowed') || dbErr.message.includes('column'))) {
+        console.warn('[ExamController] Missing column detected in listExams. Syncing DB columns and retrying...');
+        await ensureDbColumns(true);
+        exams = await queryExams();
+      } else {
+        throw dbErr;
+      }
+    }
 
     // Compute subject distribution for each exam
     const enrichedExams = exams.map(exam => {
@@ -67,7 +80,7 @@ export const getExamById = async (req, res, next) => {
     const { id } = req.params;
     const isAdmin = req.user?.role === 'ADMIN';
 
-    const exam = await prisma.exam.findUnique({
+    const queryExam = () => prisma.exam.findUnique({
       where: { id },
       include: {
         examQuestions: {
@@ -92,6 +105,19 @@ export const getExamById = async (req, res, next) => {
         }
       }
     });
+
+    let exam;
+    try {
+      exam = await queryExam();
+    } catch (dbErr) {
+      if (dbErr.message && (dbErr.message.includes('calculatorAllowed') || dbErr.message.includes('referenceSheetAllowed') || dbErr.message.includes('column'))) {
+        console.warn('[ExamController] Missing column detected in getExamById. Syncing DB columns and retrying...');
+        await ensureDbColumns(true);
+        exam = await queryExam();
+      } else {
+        throw dbErr;
+      }
+    }
 
     if (!exam) {
       return res.status(404).json({

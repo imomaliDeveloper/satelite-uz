@@ -10,6 +10,7 @@ import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
 import { errorHandler } from './middleware/errorHandler.js';
+import { ensureDbColumns } from './config/db.js';
 
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
@@ -67,6 +68,14 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Apply rate limiting to all /api routes
 app.use('/api', apiLimiter);
+
+// Ensure required database columns are present (runtime auto-migration)
+app.use('/api', async (req, res, next) => {
+  try {
+    await ensureDbColumns();
+  } catch (_) {}
+  next();
+});
 
 // Serve uploads
 const uploadsPath = path.resolve(__dirname, '../uploads');
