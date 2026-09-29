@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Exam Simulator - SATELITE.UZ</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/practice.css">
+  <link rel="stylesheet" href="/css/exam.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+
+  <!-- Catalog View (Shown when selecting an exam) -->
+  <div id="exam-catalog-view">
+    <header class="navbar">
+      <div class="container navbar-inner">
+        <a href="/" class="brand-logo">
+          <div class="brand-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-30 12 12)"></ellipse>
+            </svg>
+          </div>
+          <span>SATELITE<span class="text-cyan">.UZ</span></span>
+        </a>
+
+        <nav>
+          <ul class="nav-links" id="navbar-links">
+            <li><a href="/practice.html" class="nav-link">Practice</a></li>
+            <li><a href="/question-bank.html" class="nav-link">Question Bank</a></li>
+            <li><a href="/exam.html" class="nav-link active">Exams</a></li>
+            <li><a href="/dashboard.html" class="nav-link">My Progress</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-actions" id="navbar-actions"></div>
+      </div>
+    </header>
+
+    <main class="dashboard-page">
+      <div class="container">
+        <div style="margin-bottom: 32px;">
+          <h1 style="font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px;">
+            Official Digital SAT Timed Assessments
+          </h1>
+          <p class="text-secondary" style="font-size: 1.05rem;">
+            Full-length timed examinations simulating test day conditions with strict time limits and detailed score reports.
+          </p>
+        </div>
+
+        <div class="kpi-grid" id="exams-container" style="grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));">
+          <div class="skeleton" style="height: 240px;"></div>
+          <div class="skeleton" style="height: 240px;"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Active Exam Simulator (Full Screen Viewport) -->
+  <div id="exam-simulator-view" class="exam-viewport" style="display: none;">
+    <!-- Top Examination Nav -->
+    <header class="exam-navbar">
+      <div class="exam-title-badge">
+        <span style="font-size: 1.3rem;">⚡</span>
+        <div>
+          <div id="sim-exam-title" style="font-weight: 800; font-size: 1.05rem;">Digital SAT Diagnostic</div>
+          <div id="sim-q-meta" style="font-size: 0.8rem; color: var(--text-secondary);">Module 1 • Section 1</div>
+        </div>
+      </div>
+
+      <!-- Live Countdown Timer -->
+      <div class="exam-timer-box" id="timer-box">
+        <span>⏱️</span>
+        <span id="countdown-display">00:45:00</span>
+      </div>
+
+      <div class="exam-actions-top">
+        <button id="mark-review-btn" class="btn btn-sm btn-outline" style="border-color: #f59e0b; color: #f59e0b;">
+          <span>☆</span>
+          <span id="mark-review-text">Mark for Review</span>
+        </button>
+        <button id="submit-exam-trigger-btn" class="btn btn-sm btn-danger">
+          Submit Exam
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Question & Navigation Pane -->
+    <div class="exam-main">
+      <!-- Left: Question Body -->
+      <div class="exam-question-pane">
+        <div style="max-width: 860px; margin: 0 auto; width: 100%;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <span class="question-counter" id="sim-counter">Question 1 of 15</span>
+            <span class="badge badge-subject" id="sim-subject-badge">Mathematics</span>
+          </div>
+
+          <div class="card practice-card" style="margin-bottom: 24px;">
+            <div class="question-content" id="sim-question-text">
+              Loading question content...
+            </div>
+
+            <div class="question-image-wrap" id="sim-image-wrap" style="display: none;">
+              <img id="sim-image" src="" alt="Exam Diagram">
+            </div>
+
+            <div class="options-grid" id="sim-options-container">
+              <!-- Choices A, B, C, D -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Exam Bottom Navigation Bar -->
+        <div class="exam-bottom-bar" style="max-width: 860px; margin: 0 auto; width: 100%;">
+          <button id="sim-prev-btn" class="btn btn-secondary" disabled>← Previous</button>
+          <button id="sim-clear-btn" class="btn btn-outline">Clear Choice</button>
+          <button id="sim-next-btn" class="btn btn-primary">Next →</button>
+        </div>
+      </div>
+
+      <!-- Right: Question Matrix Drawer -->
+      <aside class="exam-nav-drawer">
+        <div class="exam-nav-header">
+          <span>Question Matrix</span>
+          <span id="sim-answered-count" style="font-size: 0.85rem; color: var(--accent-cyan);">0 / 15 Answered</span>
+        </div>
+
+        <div class="question-grid" id="sim-question-grid">
+          <!-- 1..N items -->
+        </div>
+
+        <div class="exam-legend">
+          <div class="legend-item">
+            <span class="legend-dot" style="background: var(--accent-primary);"></span>
+            <span>Answered Question</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background: var(--bg-surface-elevated); border: 1px solid var(--border-medium);"></span>
+            <span>Unanswered Question</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background: #f59e0b;"></span>
+            <span>Marked for Review (★)</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Submit Exam Confirmation Modal -->
+  <div class="modal-backdrop" id="submit-confirm-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Ready to Submit Exam?</h3>
+        <button onclick="closeSubmitModal()" style="font-size: 1.5rem; color: var(--text-muted);">×</button>
+      </div>
+      <div class="modal-body" id="submit-summary-text">
+        You have answered 0 of 15 questions. Unanswered questions will be scored as skipped. Are you sure you wish to submit?
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeSubmitModal()">Return to Exam</button>
+        <button class="btn btn-danger" id="confirm-submit-btn">Yes, Finalize & Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/toast.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/exam.js"></script>
+</body>
+</html>

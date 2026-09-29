@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Command Center - SATELITE.UZ</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="navbar">
+    <div class="container navbar-inner">
+      <a href="/" class="brand-logo">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-30 12 12)"></ellipse>
+          </svg>
+        </div>
+        <span>SATELITE<span class="text-cyan">.UZ</span></span>
+      </a>
+
+      <nav>
+        <ul class="nav-links" id="navbar-links">
+          <li><a href="/practice.html" class="nav-link">Practice</a></li>
+          <li><a href="/question-bank.html" class="nav-link">Question Bank</a></li>
+          <li><a href="/exam.html" class="nav-link">Exams</a></li>
+          <li><a href="/dashboard.html" class="nav-link active">My Progress</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions" id="navbar-actions">
+        <!-- Rendered by Auth.initNavbar() -->
+      </div>
+    </div>
+  </header>
+
+  <!-- Dashboard Container -->
+  <main class="dashboard-page">
+    <div class="container">
+      <!-- Header with Welcome & Streak -->
+      <div class="dashboard-header">
+        <div>
+          <h1 class="welcome-title">Good morning, <span id="user-display-name">Student</span></h1>
+          <p class="welcome-subtitle">Here is your examination readiness overview and progress telemetry.</p>
+        </div>
+
+        <div class="streak-pill">
+          <span>🔥</span>
+          <span id="streak-counter">3 Day Practice Streak</span>
+        </div>
+      </div>
+
+      <!-- KPI Metrics Grid -->
+      <div class="kpi-grid">
+        <div class="card kpi-card">
+          <div class="kpi-icon-wrap" style="color: var(--accent-primary);">✍️</div>
+          <div class="kpi-data">
+            <div class="kpi-val" id="stat-practiced">0</div>
+            <div class="kpi-lbl">Questions Practiced</div>
+          </div>
+        </div>
+
+        <div class="card kpi-card">
+          <div class="kpi-icon-wrap" style="color: var(--accent-cyan);">⏱️</div>
+          <div class="kpi-data">
+            <div class="kpi-val" id="stat-exams">0</div>
+            <div class="kpi-lbl">Exams Completed</div>
+          </div>
+        </div>
+
+        <div class="card kpi-card">
+          <div class="kpi-icon-wrap" style="color: #10b981;">🎯</div>
+          <div class="kpi-data">
+            <div class="kpi-val" id="stat-accuracy">0%</div>
+            <div class="kpi-lbl">Average Accuracy</div>
+          </div>
+        </div>
+
+        <div class="card kpi-card">
+          <div class="kpi-icon-wrap" style="color: #f59e0b;">⭐</div>
+          <div class="kpi-data">
+            <div class="kpi-val" id="stat-bookmarks">0</div>
+            <div class="kpi-lbl">Saved Bookmarks</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Layout -->
+      <div class="dashboard-layout">
+        <!-- Left Column: Continue Practice & Recent Results -->
+        <div>
+          <!-- Continue Practice Hero Widget -->
+          <div class="continue-card">
+            <div class="continue-info">
+              <span class="badge badge-subject" style="margin-bottom: 12px;" id="continue-subject-badge">Mathematics</span>
+              <h3 class="continue-title" id="continue-title">Algebra & Advanced Linear Equations</h3>
+              <p class="continue-desc" id="continue-desc">Resume your targeted session with high-yield practice questions.</p>
+              <a href="/practice.html" class="btn btn-primary" id="continue-action-btn">Continue Practice →</a>
+            </div>
+
+            <!-- Animated SVG Progress Ring -->
+            <div class="progress-ring-container">
+              <svg class="progress-ring" width="120" height="120">
+                <circle class="progress-ring-circle-bg" stroke-width="8" r="48" cx="60" cy="60" />
+                <circle id="progress-circle" class="progress-ring-circle" stroke-width="8" stroke-dasharray="301.6" stroke-dashoffset="90" r="48" cx="60" cy="60" />
+              </svg>
+              <div class="progress-ring-text">
+                <div style="font-size: 1.4rem;" id="progress-percent">72%</div>
+                <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Mastery</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Question of the Day -->
+          <div class="card qotd-card">
+            <div class="qotd-header">
+              <span>✦</span>
+              <span>Question of the Day</span>
+            </div>
+            <p class="qotd-text" id="qotd-text">
+              Loading today's high-yield diagnostic question...
+            </p>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <a href="/practice.html" class="btn btn-sm btn-outline" id="qotd-btn">Solve Question</a>
+              <span class="badge badge-medium" id="qotd-difficulty">MEDIUM</span>
+            </div>
+          </div>
+
+          <!-- Recent Results Section -->
+          <div class="card" style="padding: 28px;">
+            <div class="section-title-wrap">
+              <h3 class="section-title">Recent Test Activity</h3>
+              <a href="/profile.html" class="btn btn-sm btn-outline">View All History</a>
+            </div>
+
+            <div style="overflow-x: auto;">
+              <table class="results-table">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Assessment / Set</th>
+                    <th>Score</th>
+                    <th>Accuracy</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-results-body">
+                  <tr>
+                    <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                      Loading assessment history...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Weak Topics & Quick Launches -->
+        <div>
+          <!-- Weak Topics Widget -->
+          <div class="card" style="margin-bottom: 28px;">
+            <div class="section-title-wrap">
+              <h3 class="section-title" style="font-size: 1.15rem;">Priority Growth Topics</h3>
+            </div>
+            <p class="text-secondary" style="font-size: 0.88rem; margin-bottom: 18px;">
+              Topics where additional question reps will yield the largest score improvements.
+            </p>
+
+            <div class="weak-topics-list" id="weak-topics-container">
+              <!-- Rendered dynamically by dashboard.js per user -->
+              <div class="skeleton" style="height: 52px; border-radius: var(--radius-md);"></div>
+              <div class="skeleton" style="height: 52px; border-radius: var(--radius-md);"></div>
+            </div>
+          </div>
+
+          <!-- Quick Practice Launcher -->
+          <div class="card">
+            <h3 class="section-title" style="font-size: 1.15rem; margin-bottom: 14px;">Instant Practice</h3>
+            <p class="text-secondary" style="font-size: 0.88rem; margin-bottom: 18px;">Select a subject to launch an instant 10-question adaptive set.</p>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;" id="subject-launchers">
+              <a href="/practice.html?subject=math" class="btn btn-secondary" style="justify-content: space-between; padding: 14px 18px;">
+                <span>📐 Mathematics Practice</span>
+                <span>→</span>
+              </a>
+              <a href="/practice.html?subject=reading-writing" class="btn btn-secondary" style="justify-content: space-between; padding: 14px 18px;">
+                <span>📖 Reading & Writing Practice</span>
+                <span>→</span>
+              </a>
+              <a href="/exam.html" class="btn btn-outline" style="justify-content: space-between; padding: 14px 18px; border-color: var(--accent-primary);">
+                <span>⏱️ Full Diagnostic Exam</span>
+                <span>→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="/js/toast.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

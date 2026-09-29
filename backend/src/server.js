@@ -101,20 +101,69 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Cloud DB initialization and sync endpoint
+app.get('/api/setup/sync-database', async (req, res) => {
+  const secret = req.query.secret;
+  if (secret !== 'satelite2026') {
+    return res.status(403).json({ error: 'Secret required' });
+  }
+  try {
+    const { execSync } = await import('child_process');
+    const rootDir = path.resolve(__dirname, '../..');
+    const push = execSync('npx prisma db push --schema=backend/prisma/schema.prisma --accept-data-loss', {
+      cwd: rootDir,
+      env: process.env
+    }).toString();
+    let seed = '';
+    try {
+      seed = execSync('node backend/src/utils/seed.js', {
+        cwd: rootDir,
+        env: process.env
+      }).toString();
+    } catch (sErr) {
+      seed = sErr.message;
+    }
+    return res.json({ success: true, push, seed });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message, stack: err.stack });
+  }
+});
+
 // Serve frontend static files
-const frontendPath = path.resolve(__dirname, '../../frontend');
-const publicPath = path.resolve(__dirname, '../../public');
-const staticPath = fs.existsSync(publicPath) ? publicPath : frontendPath;
+const candidates = [
+  path.join(__dirname, '../public'),
+  path.resolve(__dirname, '../../public'),
+  path.resolve(__dirname, '../../frontend')
+];
+const staticPath = candidates.find(p => fs.existsSync(p)) || path.join(__dirname, '../public');
 
 if (fs.existsSync(staticPath)) {
   app.use(express.static(staticPath));
+  app.use('/frontend', express.static(staticPath));
 
   // Client-side fallback for pretty routes or landing page
   app.get('/', (req, res) => {
     res.sendFile(path.join(staticPath, 'index.html'));
   });
 
+  const pages = [
+    'bookmarks', 'dashboard', 'exam', 'forgot-password',
+    'login', 'practice', 'profile', 'question-bank',
+    'register', 'results', 'review'
+  ];
+  pages.forEach(page => {
+    app.get(`/${page}`, (req, res) => {
+      res.sendFile(path.join(staticPath, `${page}.html`));
+    });
+    app.get(`/${page}.html`, (req, res) => {
+      res.sendFile(path.join(staticPath, `${page}.html`));
+    });
+  });
+
   app.get('/admin', (req, res) => {
+    res.sendFile(path.join(staticPath, 'admin/index.html'));
+  });
+  app.get('/admin/', (req, res) => {
     res.sendFile(path.join(staticPath, 'admin/index.html'));
   });
 }

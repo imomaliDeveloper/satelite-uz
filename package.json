@@ -11,8 +11,8 @@
     "prisma:generate": "npm --prefix backend run prisma:generate",
     "prisma:migrate": "npm --prefix backend run prisma:migrate",
     "prisma:seed": "npm --prefix backend run prisma:seed",
-    "build": "node backend/prisma/prepare-db.js && prisma generate --schema=backend/prisma/schema.prisma && node backend/prisma/migrate-neon.js",
-    "vercel-build": "node backend/prisma/prepare-db.js && prisma generate --schema=backend/prisma/schema.prisma && node backend/prisma/migrate-neon.js"
+    "build": "cd backend && npm run prisma:generate",
+    "vercel-build": "cd backend && npm run prisma:generate"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
