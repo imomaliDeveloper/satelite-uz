@@ -596,7 +596,8 @@
             <span>SAT Math Reference Sheet</span>
           </div>
           <div class="sat-calc-controls">
-            <button class="sat-control-btn" id="sat-ref-max-btn" title="Toggle Fullscreen" aria-label="Expand Reference Sheet">⤢</button>
+            <button class="sat-control-btn" id="sat-ref-expand-all-btn" title="Expand / Collapse all sections (Ko'tarish va yoyish)" style="width: auto; padding: 0 10px; font-size: 0.78rem;">⇕ Collapse All</button>
+            <button class="sat-control-btn" id="sat-ref-max-btn" title="Toggle Fullscreen (To'liq ochish/Ko'tarish)" aria-label="Expand Reference Sheet">⤢</button>
             <button class="sat-control-btn close-btn" id="sat-ref-close-btn" title="Close Reference (Esc)" aria-label="Close reference sheet">✕</button>
           </div>
         </div>
@@ -695,6 +696,17 @@
         e.stopPropagation();
         this.toggleReferenceSheetMaximize();
       });
+
+      const expandAllBtn = document.getElementById('sat-ref-expand-all-btn');
+      if (expandAllBtn) {
+        expandAllBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const sections = document.querySelectorAll('.sat-formula-section');
+          const anyClosed = Array.from(sections).some(s => !s.classList.contains('open'));
+          sections.forEach(s => s.classList.toggle('open', anyClosed));
+          expandAllBtn.textContent = anyClosed ? '⇕ Collapse All' : '⇕ Expand All';
+        });
+      }
 
       // Calc Mode Switching
       this.dom.modeGraphingBtn.addEventListener('click', () => {
@@ -946,8 +958,8 @@
         if (filteredFormulas.length === 0) return;
         matchesFound += filteredFormulas.length;
 
-        // Auto open if searching or filtered
-        const isOpen = query || category !== 'ALL' ? 'open' : '';
+        // Open all sections by default so students can immediately scroll up and down through all formulas and demo problems
+        const isOpen = 'open';
 
         html += `
           <div class="sat-formula-section ${isOpen}" id="${sec.id}">

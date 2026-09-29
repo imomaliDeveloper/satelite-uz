@@ -23,6 +23,7 @@ export async function runInitDb() {
       if (!err.message.includes('already exists')) {
         console.warn('[InitDB] SQL Warning:', err.message);
       }
+    }
   }
 
   // Ensure columns exist on Question and Exam
