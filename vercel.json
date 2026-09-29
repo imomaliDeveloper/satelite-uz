@@ -1,6 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "node backend/prisma/prepare-db.js && prisma generate --schema=backend/prisma/schema.prisma",
+  "buildCommand": "node backend/prisma/prepare-db.js && prisma generate --schema=backend/prisma/schema.prisma && node backend/prisma/migrate-neon.js",
+  "outputDirectory": "public",
+  "cleanUrls": true,
   "rewrites": [
     {
       "source": "/api/(.*)",
