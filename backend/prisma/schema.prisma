@@ -5,7 +5,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -75,10 +75,12 @@ model Question {
   questionText String
   questionType String   @default("MULTIPLE_CHOICE") // "MULTIPLE_CHOICE" | "MULTI_SELECT" | "TRUE_FALSE"
   difficulty   String   @default("MEDIUM")          // "EASY" | "MEDIUM" | "HARD"
-  explanation  String?
-  imageUrl     String?
-  isPublished  Boolean  @default(true)
-  createdById  String?
+  explanation            String?
+  imageUrl               String?
+  isPublished            Boolean        @default(true)
+  calculatorAllowed      Boolean        @default(true)
+  referenceSheetAllowed  Boolean        @default(true)
+  createdById            String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -117,9 +119,11 @@ model Exam {
   title           String
   description     String?
   durationMinutes Int      @default(60)
-  totalQuestions  Int      @default(0)
-  isPublished     Boolean  @default(true)
-  createdAt       DateTime @default(now())
+  totalQuestions         Int            @default(0)
+  isPublished            Boolean        @default(true)
+  calculatorAllowed      Boolean        @default(true)
+  referenceSheetAllowed  Boolean        @default(true)
+  createdAt              DateTime       @default(now())
   updatedAt       DateTime @updatedAt
 
   // Relations

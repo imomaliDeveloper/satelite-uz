@@ -11,6 +11,7 @@
   
   <link rel="stylesheet" href="/css/global.css">
   <link rel="stylesheet" href="/css/practice.css">
+  <link rel="stylesheet" href="/css/sat-math-tools.css">
   <link rel="stylesheet" href="/css/responsive.css">
 </head>
 <body>
@@ -67,10 +68,20 @@
             <span class="badge badge-medium" id="q-difficulty">MEDIUM</span>
           </div>
 
-          <button id="q-bookmark-btn" class="btn btn-sm btn-outline" style="gap: 6px;">
-            <span id="bookmark-icon">☆</span>
-            <span>Bookmark</span>
-          </button>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <button id="practice-calc-btn" class="sat-exam-tool-item" title="Open Desmos Calculator" aria-label="Open SAT Desmos calculator">
+              <span>🧮</span>
+              <span>Calculator</span>
+            </button>
+            <button id="practice-ref-btn" class="sat-exam-tool-item" title="Open SAT Reference Sheet" aria-label="Open SAT reference sheet">
+              <span>📐</span>
+              <span>Reference</span>
+            </button>
+            <button id="q-bookmark-btn" class="btn btn-sm btn-outline" style="gap: 6px;">
+              <span id="bookmark-icon">☆</span>
+              <span>Bookmark</span>
+            </button>
+          </div>
         </div>
 
         <!-- Question Body Card -->
@@ -113,6 +124,7 @@
   <script src="/js/theme.js"></script>
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
+  <script src="/js/sat-math-tools.js"></script>
   <script src="/js/practice.js"></script>
 </body>
 </html>

@@ -11,6 +11,7 @@
   
   <link rel="stylesheet" href="/css/global.css">
   <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/sat-math-tools.css">
   <link rel="stylesheet" href="/css/responsive.css">
 
   <style>
@@ -101,6 +102,7 @@
       <!-- Navigation Tabs -->
       <div class="tab-nav">
         <button class="tab-btn active" data-tab="bookmarks-tab">Saved Bookmarks (<span id="bookmark-count-badge">0</span>)</button>
+        <button class="tab-btn" data-tab="formulas-tab">📐 Saved Formulas (<span id="formula-count-badge">0</span>)</button>
         <button class="tab-btn" data-tab="history-tab">Assessment History</button>
         <button class="tab-btn" data-tab="security-tab">Security & Password</button>
       </div>
@@ -109,6 +111,20 @@
       <div id="bookmarks-tab" class="tab-pane active">
         <div class="kpi-grid" id="bookmarks-list" style="grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));">
           <div class="skeleton" style="height: 200px;"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Saved Formulas & Quick Reference (Spec 89) -->
+      <div id="formulas-tab" class="tab-pane">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 4px;">My Bookmarked SAT Formulas</h3>
+            <p class="text-secondary" style="font-size: 0.9rem;">Formulas bookmarked during study sessions for quick review and memorization.</p>
+          </div>
+          <button class="btn btn-sm btn-primary" onclick="if(window.SatMathTools) SatMathTools.openReferenceSheet()">Open Reference Sheet 📐</button>
+        </div>
+        <div class="kpi-grid" id="saved-formulas-list" style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));">
+          <!-- Rendered dynamically -->
         </div>
       </div>
 
@@ -169,6 +185,7 @@
   <script src="/js/theme.js"></script>
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
+  <script src="/js/sat-math-tools.js"></script>
   <script src="/js/profile.js"></script>
 </body>
 </html>

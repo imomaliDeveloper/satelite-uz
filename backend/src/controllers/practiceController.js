@@ -142,19 +142,109 @@ export const submitPracticeAnswer = async (req, res, next) => {
       });
     }
 
+    const relevantFormula = detectRelevantFormula(question.questionText, question.topic?.name);
+
     res.json({
       success: true,
       data: {
         isCorrect,
         correctOptionId: correctOption?.id,
         correctOptionLabel: correctOption?.optionLabel,
-        explanation: question.explanation
+        explanation: question.explanation,
+        relevantFormula,
+        recommendedTopic: question.topic?.name || question.subject?.name || 'SAT Mathematics'
       }
     });
   } catch (error) {
     next(error);
   }
 };
+
+function detectRelevantFormula(text = '', topic = '') {
+  const combined = (text + ' ' + (topic || '')).toLowerCase();
+  if (combined.includes('circle') || combined.includes('radius') || combined.includes('diameter') || combined.includes('circumference') || combined.includes('arc')) {
+    return {
+      key: 'circle-area',
+      section: 'Circles',
+      name: 'Area & Circumference of Circle',
+      formula: 'A = πr²,  C = 2πr',
+      formulaKey: 'circles'
+    };
+  }
+  if (combined.includes('quadratic') || combined.includes('parabola') || combined.includes('vertex') || combined.includes('discriminant') || combined.includes('polynomial')) {
+    return {
+      key: 'quadratic-formula',
+      section: 'Quadratic Equations',
+      name: 'Quadratic Formula & Vertex',
+      formula: 'x = (-b ± √(b² - 4ac)) / (2a)',
+      formulaKey: 'quadratic'
+    };
+  }
+  if (combined.includes('right triangle') || combined.includes('pythagor') || combined.includes('hypotenuse')) {
+    return {
+      key: 'pythagorean-theorem',
+      section: 'Pythagorean Theorem',
+      name: 'Pythagorean Theorem',
+      formula: 'a² + b² = c²',
+      formulaKey: 'pythagorean'
+    };
+  }
+  if (combined.includes('30-60-90') || combined.includes('45-45-90') || combined.includes('special triangle')) {
+    return {
+      key: 'special-right-triangles',
+      section: 'Special Right Triangles',
+      name: 'Special Right Triangles Ratio',
+      formula: 'x : x√3 : 2x  and  s : s : s√2',
+      formulaKey: 'special-right-triangles'
+    };
+  }
+  if (combined.includes('slope') || combined.includes('coordinate') || combined.includes('midpoint') || combined.includes('linear equation') || combined.includes('parallel') || combined.includes('perpendicular')) {
+    return {
+      key: 'slope-formula',
+      section: 'Coordinate Geometry',
+      name: 'Slope & Linear Equations',
+      formula: 'm = (y₂ - y₁) / (x₂ - x₁),  y = mx + b',
+      formulaKey: 'coordinate-geometry'
+    };
+  }
+  if (combined.includes('volume') || combined.includes('cylinder') || combined.includes('sphere') || combined.includes('cone') || combined.includes('prism')) {
+    return {
+      key: 'volume-cylinder',
+      section: 'Area and Volume',
+      name: 'Volume Relationships',
+      formula: 'V = ℓwh,  V = πr²h,  V = (4/3)πr³',
+      formulaKey: 'area-volume'
+    };
+  }
+  if (combined.includes('exponent') || combined.includes('power') || combined.includes('radical') || combined.includes('root')) {
+    return {
+      key: 'exponents-laws',
+      section: 'Exponents',
+      name: 'Laws of Exponents',
+      formula: 'xᵃ · xᵇ = xᵃ⁺ᵇ,  (xᵃ)ᵇ = xᵃᵇ',
+      formulaKey: 'exponents'
+    };
+  }
+  if (combined.includes('probability') || combined.includes('chance') || combined.includes('likelihood')) {
+    return {
+      key: 'probability-basic',
+      section: 'Probability',
+      name: 'Probability of Events',
+      formula: 'P(A) = Favorable / Total',
+      formulaKey: 'probability'
+    };
+  }
+  if (combined.includes('mean') || combined.includes('median') || combined.includes('standard deviation') || combined.includes('average') || combined.includes('range')) {
+    return {
+      key: 'statistics-mean',
+      section: 'Statistics',
+      name: 'Statistics & Measures of Center',
+      formula: 'Mean x̄ = (∑x) / n',
+      formulaKey: 'statistics'
+    };
+  }
+  return null;
+}
 
 export const completePracticeSession = async (req, res, next) => {
   try {
@@ -299,6 +389,8 @@ export const startExamSession = async (req, res, next) => {
           title: exam.title,
           durationMinutes: exam.durationMinutes,
           totalQuestions: exam.examQuestions.length,
+          calculatorAllowed: exam.calculatorAllowed !== false,
+          referenceSheetAllowed: exam.referenceSheetAllowed !== false,
           startedAt: session.startedAt,
           mode: 'EXAM'
         },

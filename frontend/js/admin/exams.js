@@ -32,6 +32,16 @@ async function loadExams() {
         <td style="font-weight: 700;">${escapeHtml(e.title)}</td>
         <td>⏱️ ${e.durationMinutes} mins</td>
         <td><span class="badge badge-topic">${e.totalQuestions} Questions</span></td>
+        <td>
+          <div style="display: flex; gap: 4px; font-size: 0.76rem; flex-wrap: wrap;">
+            <span class="badge ${e.calculatorAllowed !== false ? 'badge-subject' : 'badge-status-inactive'}" title="${e.calculatorAllowed !== false ? 'Calculator Allowed' : 'Calculator Disabled'}">
+              🧮 ${e.calculatorAllowed !== false ? 'Calc ON' : 'Calc OFF'}
+            </span>
+            <span class="badge ${e.referenceSheetAllowed !== false ? 'badge-topic' : 'badge-status-inactive'}" title="${e.referenceSheetAllowed !== false ? 'Reference Sheet Allowed' : 'Reference Disabled'}">
+              📐 ${e.referenceSheetAllowed !== false ? 'Ref ON' : 'Ref OFF'}
+            </span>
+          </div>
+        </td>
         <td>${e.attemptsCount || 0}</td>
         <td>
           <span class="badge ${e.isPublished ? 'badge-status-active' : 'badge-status-inactive'}">
@@ -125,6 +135,8 @@ async function openExamModal(examId = null) {
       document.getElementById('exam-duration-input').value = exam.durationMinutes;
       document.getElementById('exam-desc-input').value = exam.description || '';
       document.getElementById('exam-pub-input').checked = exam.isPublished;
+      document.getElementById('exam-calc-allowed').checked = exam.calculatorAllowed !== false;
+      document.getElementById('exam-ref-allowed').checked = exam.referenceSheetAllowed !== false;
 
       (exam.questions || []).forEach(q => selectedQuestionIds.add(q.id));
     } catch (e) {
@@ -135,6 +147,8 @@ async function openExamModal(examId = null) {
     form.reset();
     document.getElementById('exam-duration-input').value = 45;
     document.getElementById('exam-pub-input').checked = true;
+    document.getElementById('exam-calc-allowed').checked = true;
+    document.getElementById('exam-ref-allowed').checked = true;
   }
 
   document.getElementById('selected-q-count').textContent = selectedQuestionIds.size;
@@ -162,18 +176,30 @@ function setupExamForm() {
     const durationMinutes = parseInt(document.getElementById('exam-duration-input').value) || 45;
     const description = document.getElementById('exam-desc-input').value.trim();
     const isPublished = document.getElementById('exam-pub-input').checked;
+    const calculatorAllowed = document.getElementById('exam-calc-allowed').checked;
+    const referenceSheetAllowed = document.getElementById('exam-ref-allowed').checked;
     const questionIds = Array.from(selectedQuestionIds);
 
     const btn = document.getElementById('exam-submit-btn');
     btn.disabled = true;
     btn.textContent = 'Saving...';
 
+    const payload = {
+      title,
+      durationMinutes,
+      description,
+      isPublished,
+      calculatorAllowed,
+      referenceSheetAllowed,
+      questionIds
+    };
+
     try {
       if (editingExamId) {
-        await API.patch(`/exams/${editingExamId}`, { title, durationMinutes, description, isPublished, questionIds });
+        await API.patch(`/exams/${editingExamId}`, payload);
         Toast.success('Exam updated successfully.');
       } else {
-        await API.post('/exams', { title, durationMinutes, description, isPublished, questionIds });
+        await API.post('/exams', payload);
         Toast.success('Exam created and ready for testing.');
       }
 

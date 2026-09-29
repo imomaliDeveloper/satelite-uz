@@ -5,7 +5,8 @@ import {
   createQuestion,
   updateQuestion,
   deleteQuestion,
-  togglePublishQuestion
+  togglePublishQuestion,
+  bulkUpdateQuestions
 } from '../controllers/questionController.js';
 import { requireAuth, requireAdmin, optionalAuth } from '../middleware/auth.js';
 import { uploadQuestionImage } from '../middleware/upload.js';
@@ -13,6 +14,8 @@ import { uploadQuestionImage } from '../middleware/upload.js';
 const router = express.Router();
 
 router.get('/', optionalAuth, listQuestions);
+router.patch('/bulk', requireAuth, requireAdmin, bulkUpdateQuestions);
+router.post('/bulk', requireAuth, requireAdmin, bulkUpdateQuestions);
 router.get('/:id', optionalAuth, getQuestionById);
 
 // Admin-only endpoints

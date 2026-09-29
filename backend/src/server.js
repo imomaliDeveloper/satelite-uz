@@ -42,11 +42,14 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
-      imgSrc: ["'self'", "data:", "blob:", "*"],
-      connectSrc: ["'self'", "*"]
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net", "https://www.desmos.com", "https://*.desmos.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://www.desmos.com", "https://*.desmos.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "https://www.desmos.com", "https://*.desmos.com"],
+      imgSrc: ["'self'", "data:", "blob:", "*", "https://www.desmos.com", "https://*.desmos.com"],
+      frameSrc: ["'self'", "https://www.desmos.com", "https://*.desmos.com"],
+      childSrc: ["'self'", "https://www.desmos.com", "https://*.desmos.com"],
+      workerSrc: ["'self'", "blob:", "https://www.desmos.com", "https://*.desmos.com"],
+      connectSrc: ["'self'", "*", "https://www.desmos.com", "https://*.desmos.com"]
     }
   },
   crossOriginEmbedderPolicy: false

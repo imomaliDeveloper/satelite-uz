@@ -86,6 +86,11 @@ async function loadQuestionForEdit(id) {
     document.getElementById('form-explanation').value = q.explanation || '';
     document.getElementById('form-published').checked = q.isPublished;
 
+    const calcAllowedEl = document.getElementById('form-calc-allowed');
+    const refAllowedEl = document.getElementById('form-ref-allowed');
+    if (calcAllowedEl) calcAllowedEl.checked = q.calculatorAllowed !== false;
+    if (refAllowedEl) refAllowedEl.checked = q.referenceSheetAllowed !== false;
+
     if (q.imageUrl) {
       const prevWrap = document.getElementById('current-image-preview');
       const prevImg = document.getElementById('current-img-tag');
@@ -187,6 +192,8 @@ function setupFormSubmit() {
     const questionText = document.getElementById('form-text').value.trim();
     const explanation = document.getElementById('form-explanation').value.trim();
     const isPublished = document.getElementById('form-published').checked;
+    const calculatorAllowed = document.getElementById('form-calc-allowed') ? document.getElementById('form-calc-allowed').checked : true;
+    const referenceSheetAllowed = document.getElementById('form-ref-allowed') ? document.getElementById('form-ref-allowed').checked : true;
     const correctChoice = document.querySelector('input[name="correctChoice"]:checked')?.value || 'A';
 
     const options = [];
@@ -207,6 +214,8 @@ function setupFormSubmit() {
     formData.append('questionText', questionText);
     formData.append('explanation', explanation);
     formData.append('isPublished', isPublished);
+    formData.append('calculatorAllowed', calculatorAllowed);
+    formData.append('referenceSheetAllowed', referenceSheetAllowed);
     formData.append('options', JSON.stringify(options));
 
     const imageFile = document.getElementById('form-image').files[0];

@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="/css/global.css">
   <link rel="stylesheet" href="/css/practice.css">
   <link rel="stylesheet" href="/css/exam.css">
+  <link rel="stylesheet" href="/css/sat-math-tools.css">
   <link rel="stylesheet" href="/css/responsive.css">
 </head>
 <body>
@@ -80,7 +81,15 @@
         <span id="countdown-display">00:45:00</span>
       </div>
 
-      <div class="exam-actions-top">
+      <div class="exam-actions-top" style="display: flex; gap: 8px; align-items: center;">
+        <button id="exam-calc-btn" class="sat-exam-tool-item" title="Open Desmos Calculator" aria-label="Open SAT Desmos calculator">
+          <span>🧮</span>
+          <span>Calculator</span>
+        </button>
+        <button id="exam-ref-btn" class="sat-exam-tool-item" title="Open SAT Reference Sheet" aria-label="Open SAT reference sheet">
+          <span>📐</span>
+          <span>Reference</span>
+        </button>
         <button id="mark-review-btn" class="btn btn-sm btn-outline" style="border-color: #f59e0b; color: #f59e0b;">
           <span>☆</span>
           <span id="mark-review-text">Mark for Review</span>
@@ -174,6 +183,7 @@
   <script src="/js/theme.js"></script>
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
+  <script src="/js/sat-math-tools.js"></script>
   <script src="/js/exam.js"></script>
 </body>
 </html>

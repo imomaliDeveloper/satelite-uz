@@ -11,6 +11,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadBookmarks(),
     loadHistory()
   ]);
+  loadFormulaBookmarks();
+
+  window.addEventListener('satelite:bookmarks_updated', () => {
+    loadFormulaBookmarks();
+  });
 
   setupPasswordForm();
 });
@@ -201,4 +206,51 @@ function escapeHtml(str) {
   });
 }
 
+function loadFormulaBookmarks() {
+  const container = document.getElementById('saved-formulas-list');
+  const badge = document.getElementById('formula-count-badge');
+  if (!container || !window.SatMathTools) return;
+
+  const formulas = SatMathTools.getBookmarks();
+  if (badge) badge.textContent = formulas.length;
+
+  if (formulas.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state" style="grid-column: 1 / -1;">
+        <div class="empty-state-icon">📐</div>
+        <h3 class="empty-state-title">No Bookmarked Formulas</h3>
+        <p class="empty-state-desc">Click the bookmark star (☆) on any formula inside the SAT Reference Sheet to save it here for fast revision.</p>
+        <button class="btn btn-primary" onclick="if(window.SatMathTools) SatMathTools.openReferenceSheet()">Open SAT Reference Sheet</button>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = formulas.map(f => `
+    <div class="card" style="padding: 20px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid var(--border-medium);">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+          <span class="badge badge-subject">${escapeHtml(f.section)}</span>
+          <button class="sat-formula-btn bookmarked" title="Remove Bookmark" onclick="removeFormulaBm('${f.id}')">★</button>
+        </div>
+        <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 6px;">${escapeHtml(f.name)}</h4>
+        <div class="sat-formula-math" style="margin: 10px 0; font-size: 1.15rem;">${escapeHtml(f.math)}</div>
+        <p class="text-secondary" style="font-size: 0.85rem; line-height: 1.45;">${escapeHtml(f.description)}</p>
+      </div>
+      <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+        <button class="btn btn-sm btn-outline" onclick="SatMathTools.copyFormula('${escapeHtml(f.math)}')">📋 Copy</button>
+        <button class="btn btn-sm btn-primary" onclick="SatMathTools.openReferenceSheet('${f.id}')">View in Sheet →</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function removeFormulaBm(id) {
+  if (window.SatMathTools) {
+    SatMathTools.toggleBookmark(id);
+    loadFormulaBookmarks();
+  }
+}
+
 window.removeBookmarkItem = removeBookmarkItem;
+window.removeFormulaBm = removeFormulaBm;

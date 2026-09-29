@@ -63,22 +63,38 @@
           </div>
         </div>
 
+        <!-- Bulk Actions Bar (Spec 95) -->
+        <div id="bulk-actions-bar" style="display: none; background: rgba(6, 182, 212, 0.1); border: 1px solid var(--accent-cyan); border-radius: var(--radius-md); padding: 12px 18px; margin: 16px 24px; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-weight: 700; color: var(--accent-cyan);" id="bulk-selected-count">0 questions selected</span>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+            <span style="font-size: 0.85rem; color: var(--text-secondary);">Bulk Set SAT Tools:</span>
+            <button class="btn btn-sm btn-outline" onclick="bulkSetTools({ calculatorAllowed: true })">🧮 Enable Calc</button>
+            <button class="btn btn-sm btn-outline" onclick="bulkSetTools({ calculatorAllowed: false })">Disable Calc</button>
+            <button class="btn btn-sm btn-outline" onclick="bulkSetTools({ referenceSheetAllowed: true })">📐 Enable Ref</button>
+            <button class="btn btn-sm btn-outline" onclick="bulkSetTools({ referenceSheetAllowed: false })">Disable Ref</button>
+            <button class="btn btn-sm btn-secondary" onclick="clearBulkSelection()">Cancel</button>
+          </div>
+        </div>
+
         <!-- Table -->
         <div style="overflow-x: auto;">
           <table class="admin-table">
             <thead>
               <tr>
-                <th style="width: 45%;">Question Text</th>
+                <th style="width: 36px;"><input type="checkbox" id="select-all-q" title="Select all on this page" style="cursor: pointer;"></th>
+                <th style="width: 40%;">Question Text</th>
                 <th>Subject & Topic</th>
                 <th>Difficulty</th>
-                <th>Type</th>
+                <th>SAT Tools</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody id="admin-questions-tbody">
               <tr>
-                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 40px;">
+                <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 40px;">
                   Loading repository items...
                 </td>
               </tr>

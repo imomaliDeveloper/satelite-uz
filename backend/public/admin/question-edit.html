@@ -124,11 +124,29 @@
               <textarea id="form-explanation" class="form-textarea" rows="3"></textarea>
             </div>
 
-            <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-bottom: 28px;">
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
               <input type="checkbox" id="form-published" checked style="width: 18px; height: 18px; cursor: pointer;">
               <label for="form-published" style="font-size: 0.95rem; font-weight: 600; cursor: pointer; user-select: none;">
                 Published to Question Bank
               </label>
+            </div>
+
+            <!-- SAT Math Tools Configuration (Specs 84, 94, 95) -->
+            <div class="form-group" style="background: var(--bg-surface-elevated); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-bottom: 28px;">
+              <label class="form-label" style="font-weight: 700; margin-bottom: 10px; color: var(--text-primary);">SAT Math Tools Configuration</label>
+              <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.95rem; user-select: none;">
+                  <input type="checkbox" id="form-calc-allowed" checked style="width: 18px; height: 18px; cursor: pointer;">
+                  <span>🧮 Desmos Calculator Allowed</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.95rem; user-select: none;">
+                  <input type="checkbox" id="form-ref-allowed" checked style="width: 18px; height: 18px; cursor: pointer;">
+                  <span>📐 SAT Reference Sheet Allowed</span>
+                </label>
+              </div>
+              <span style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; display: block;">
+                Uncheck to disable calculator or reference sheet for questions requiring no tools.
+              </span>
             </div>
 
             <button type="submit" id="form-submit-btn" class="btn btn-primary btn-lg" style="width: 100%;">

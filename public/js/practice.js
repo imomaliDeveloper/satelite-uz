@@ -124,10 +124,32 @@ function renderCurrentQuestion() {
     `;
   }).join('');
 
+  // Update SAT Math Tool permissions for this question (Specs 84, 94)
+  const isCalcAllowed = q.calculatorAllowed !== false;
+  const isRefAllowed = q.referenceSheetAllowed !== false;
+
+  if (window.SatMathTools) {
+    SatMathTools.setPermissions({
+      calculatorAllowed: isCalcAllowed,
+      referenceSheetAllowed: isRefAllowed
+    });
+  }
+
+  const pCalcBtn = document.getElementById('practice-calc-btn');
+  const pRefBtn = document.getElementById('practice-ref-btn');
+  if (pCalcBtn) pCalcBtn.style.display = isCalcAllowed ? 'inline-flex' : 'none';
+  if (pRefBtn) pRefBtn.style.display = isRefAllowed ? 'inline-flex' : 'none';
+
   // Explanation container
   const explContainer = document.getElementById('explanation-container');
   if (isAlreadyAnswered) {
-    showExplanation(previousResult.isCorrect, previousResult.explanation, previousResult.correctOptionLabel);
+    showExplanation(
+      previousResult.isCorrect, 
+      previousResult.explanation, 
+      previousResult.correctOptionLabel,
+      previousResult.relevantFormula,
+      previousResult.recommendedTopic
+    );
     explContainer.style.display = 'block';
     document.getElementById('submit-answer-btn').style.display = 'none';
     document.getElementById('next-btn').style.display = 'inline-flex';
@@ -193,7 +215,13 @@ async function submitAnswer() {
     });
 
     // Show Explanation Card
-    showExplanation(result.isCorrect, result.explanation, result.correctOptionLabel);
+    showExplanation(
+      result.isCorrect, 
+      result.explanation, 
+      result.correctOptionLabel,
+      result.relevantFormula,
+      result.recommendedTopic
+    );
     document.getElementById('explanation-container').style.display = 'block';
 
     submitBtn.style.display = 'none';
@@ -211,11 +239,40 @@ async function submitAnswer() {
   }
 }
 
-function showExplanation(isCorrect, explanationText, correctLabel) {
+function showExplanation(isCorrect, explanationText, correctLabel, relevantFormula, recommendedTopic) {
   const container = document.getElementById('explanation-container');
   const boxClass = isCorrect ? 'correct-box' : 'incorrect-box';
   const icon = isCorrect ? '✔' : '✖';
   const title = isCorrect ? 'Correct! Excellent deduction.' : `Incorrect. The correct answer was (${correctLabel || 'B'}).`;
+
+  let formulaHtml = '';
+  if (relevantFormula) {
+    formulaHtml = `
+      <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+          <div>
+            <span style="font-size: 0.76rem; text-transform: uppercase; color: var(--accent-cyan); font-weight: 700; letter-spacing: 0.04em;">Official Reference Formula</span>
+            <div style="font-size: 1rem; font-weight: 700; margin-top: 2px;">
+              ${escapeHtml(relevantFormula.name)}: <code style="color: #ffffff; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">${escapeHtml(relevantFormula.formula)}</code>
+            </div>
+          </div>
+          <button class="sat-relevant-formula-badge" onclick="if(window.SatMathTools) SatMathTools.openReferenceSheet('${escapeHtml(relevantFormula.key)}')">
+            <span>📐 Open in Reference Sheet →</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  let topicHtml = '';
+  if (recommendedTopic) {
+    topicHtml = `
+      <div style="margin-top: 10px; font-size: 0.85rem; color: var(--text-secondary);">
+        <span>🎯 Recommended Focus Topic: </span>
+        <strong style="color: var(--text-primary);">${escapeHtml(recommendedTopic)}</strong>
+      </div>
+    `;
+  }
 
   container.className = `explanation-card ${boxClass}`;
   container.innerHTML = `
@@ -224,7 +281,11 @@ function showExplanation(isCorrect, explanationText, correctLabel) {
       <span>${title}</span>
     </div>
     <div class="explanation-body">
-      <strong>Explanation:</strong> ${escapeHtml(explanationText || 'Refer to the core topic formulas and deductive rules.')}
+      <div style="margin-bottom: 8px;">
+        <strong>Explanation:</strong> ${escapeHtml(explanationText || 'Refer to the core topic formulas and deductive rules.')}
+      </div>
+      ${formulaHtml}
+      ${topicHtml}
     </div>
   `;
 }
@@ -320,6 +381,26 @@ function setupEventListeners() {
   document.getElementById('prev-btn').addEventListener('click', prevQuestion);
   document.getElementById('skip-btn').addEventListener('click', skipQuestion);
   document.getElementById('q-bookmark-btn').addEventListener('click', toggleCurrentBookmark);
+
+  const practiceCalcBtn = document.getElementById('practice-calc-btn');
+  if (practiceCalcBtn) {
+    practiceCalcBtn.addEventListener('click', () => {
+      if (window.SatMathTools) SatMathTools.toggleCalculator();
+    });
+  }
+
+  const practiceRefBtn = document.getElementById('practice-ref-btn');
+  if (practiceRefBtn) {
+    practiceRefBtn.addEventListener('click', () => {
+      if (window.SatMathTools) SatMathTools.toggleReferenceSheet();
+    });
+  }
+
+  window.addEventListener('satelite:tools_state_change', (e) => {
+    const detail = e.detail || {};
+    if (practiceCalcBtn) practiceCalcBtn.classList.toggle('active', !!detail.calculatorOpen);
+    if (practiceRefBtn) practiceRefBtn.classList.toggle('active', !!detail.referenceSheetOpen);
+  });
 
   // Robust container-level click delegation for choice variants
   const optionsContainer = document.getElementById('options-container');

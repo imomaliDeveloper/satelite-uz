@@ -23,7 +23,16 @@ export async function runInitDb() {
       if (!err.message.includes('already exists')) {
         console.warn('[InitDB] SQL Warning:', err.message);
       }
-    }
+  }
+
+  // Ensure columns exist on Question and Exam
+  try {
+    await prisma.$executeRawUnsafe(`ALTER TABLE "Question" ADD COLUMN IF NOT EXISTS "calculatorAllowed" BOOLEAN NOT NULL DEFAULT true;`);
+    await prisma.$executeRawUnsafe(`ALTER TABLE "Question" ADD COLUMN IF NOT EXISTS "referenceSheetAllowed" BOOLEAN NOT NULL DEFAULT true;`);
+    await prisma.$executeRawUnsafe(`ALTER TABLE "Exam" ADD COLUMN IF NOT EXISTS "calculatorAllowed" BOOLEAN NOT NULL DEFAULT true;`);
+    await prisma.$executeRawUnsafe(`ALTER TABLE "Exam" ADD COLUMN IF NOT EXISTS "referenceSheetAllowed" BOOLEAN NOT NULL DEFAULT true;`);
+  } catch (err) {
+    // Non-blocking for databases like sqlite where syntax differs
   }
 
   // Now seed admin user and default subjects/topics/questions

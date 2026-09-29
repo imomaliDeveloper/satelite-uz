@@ -186,6 +186,8 @@ export const createQuestion = async (req, res, next) => {
       difficulty,
       explanation,
       isPublished,
+      calculatorAllowed,
+      referenceSheetAllowed,
       options
     } = req.body;
 
@@ -216,7 +218,9 @@ export const createQuestion = async (req, res, next) => {
         difficulty: difficulty || 'MEDIUM',
         explanation: explanation || null,
         imageUrl,
-        isPublished: isPublished === true || isPublished === 'true',
+        isPublished: isPublished === undefined ? true : (isPublished === true || isPublished === 'true'),
+        calculatorAllowed: calculatorAllowed === undefined ? true : (calculatorAllowed === true || calculatorAllowed === 'true'),
+        referenceSheetAllowed: referenceSheetAllowed === undefined ? true : (referenceSheetAllowed === true || referenceSheetAllowed === 'true'),
         createdById: req.user.id,
         options: {
           create: options.map(opt => ({
@@ -254,6 +258,8 @@ export const updateQuestion = async (req, res, next) => {
       difficulty,
       explanation,
       isPublished,
+      calculatorAllowed,
+      referenceSheetAllowed,
       options
     } = req.body;
 
@@ -307,7 +313,9 @@ export const updateQuestion = async (req, res, next) => {
           ...(difficulty ? { difficulty } : {}),
           ...(explanation !== undefined ? { explanation } : {}),
           ...(imageUrl !== undefined ? { imageUrl } : {}),
-          ...(isPublished !== undefined ? { isPublished: isPublished === true || isPublished === 'true' } : {})
+          ...(isPublished !== undefined ? { isPublished: isPublished === true || isPublished === 'true' } : {}),
+          ...(calculatorAllowed !== undefined ? { calculatorAllowed: calculatorAllowed === true || calculatorAllowed === 'true' } : {}),
+          ...(referenceSheetAllowed !== undefined ? { referenceSheetAllowed: referenceSheetAllowed === true || referenceSheetAllowed === 'true' } : {})
         },
         include: {
           subject: true,
@@ -321,6 +329,42 @@ export const updateQuestion = async (req, res, next) => {
       success: true,
       message: 'Question updated successfully.',
       data: updated
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const bulkUpdateQuestions = async (req, res, next) => {
+  try {
+    const { questionIds, calculatorAllowed, referenceSheetAllowed, isPublished } = req.body;
+    if (!questionIds || !Array.isArray(questionIds) || questionIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'No questions selected for bulk update.'
+      });
+    }
+
+    const data = {};
+    if (calculatorAllowed !== undefined) {
+      data.calculatorAllowed = calculatorAllowed === true || calculatorAllowed === 'true';
+    }
+    if (referenceSheetAllowed !== undefined) {
+      data.referenceSheetAllowed = referenceSheetAllowed === true || referenceSheetAllowed === 'true';
+    }
+    if (isPublished !== undefined) {
+      data.isPublished = isPublished === true || isPublished === 'true';
+    }
+
+    const result = await prisma.question.updateMany({
+      where: { id: { in: questionIds } },
+      data
+    });
+
+    res.json({
+      success: true,
+      message: `Successfully updated ${result.count} questions.`,
+      data: result
     });
   } catch (error) {
     next(error);

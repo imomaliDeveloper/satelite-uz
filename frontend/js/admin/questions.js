@@ -5,6 +5,8 @@ let currentPage = 1;
 let currentLimit = 15;
 let searchTimer = null;
 let questionToDeleteId = null;
+let selectedQuestions = new Set();
+let currentQuestionsList = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('admin-sidebar-nav').innerHTML = getSidebarHtml('questions');
@@ -35,6 +37,20 @@ function setupListeners() {
   const pubFilter = document.getElementById('admin-pub-filter');
   const prevBtn = document.getElementById('admin-prev-btn');
   const nextBtn = document.getElementById('admin-next-btn');
+  const selectAll = document.getElementById('select-all-q');
+
+  if (selectAll) {
+    selectAll.addEventListener('change', (e) => {
+      const isChecked = e.target.checked;
+      document.querySelectorAll('.row-q-select').forEach(cb => {
+        cb.checked = isChecked;
+        const id = cb.dataset.id;
+        if (isChecked) selectedQuestions.add(id);
+        else selectedQuestions.delete(id);
+      });
+      updateBulkBar();
+    });
+  }
 
   searchInput.addEventListener('input', () => {
     clearTimeout(searchTimer);
@@ -84,10 +100,10 @@ async function loadAdminQuestions() {
 
   try {
     const res = await API.get(`/questions?${params.toString()}`);
-    const questions = res.data || [];
-    renderQuestionsTable(questions, res.pagination);
+    currentQuestionsList = res.data || [];
+    renderQuestionsTable(currentQuestionsList, res.pagination);
   } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--danger); padding: 30px;">${err.message}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--danger); padding: 30px;">${err.message}</td></tr>`;
   }
 }
 
@@ -97,7 +113,7 @@ function renderQuestionsTable(questions, pagination) {
   if (questions.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 40px;">
+        <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 40px;">
           No questions matched your search criteria.
         </td>
       </tr>
@@ -109,9 +125,15 @@ function renderQuestionsTable(questions, pagination) {
     const sub = q.subject?.name || 'Subject';
     const topic = q.topic?.name || 'Topic';
     const isPub = q.isPublished;
+    const isCalc = q.calculatorAllowed !== false;
+    const isRef = q.referenceSheetAllowed !== false;
+    const isChecked = selectedQuestions.has(q.id);
 
     return `
       <tr>
+        <td>
+          <input type="checkbox" class="row-q-select" data-id="${q.id}" ${isChecked ? 'checked' : ''} onchange="toggleSelectQuestion('${q.id}', this.checked)" style="cursor: pointer;">
+        </td>
         <td>
           <div style="font-weight: 600; line-height: 1.4; margin-bottom: 4px;">
             ${escapeHtml(q.questionText)}
@@ -125,8 +147,27 @@ function renderQuestionsTable(questions, pagination) {
         <td>
           <span class="badge badge-${q.difficulty.toLowerCase()}">${q.difficulty}</span>
         </td>
-        <td style="font-size: 0.85rem; color: var(--text-secondary);">
-          ${q.questionType}
+        <td>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <button 
+              class="btn btn-sm ${isCalc ? 'btn-outline' : 'btn-secondary'}" 
+              style="font-size: 0.76rem; padding: 2px 8px; justify-content: flex-start; gap: 4px;"
+              title="Click to toggle Calculator allowed"
+              onclick="toggleTool('${q.id}', 'calculatorAllowed', ${!isCalc})"
+            >
+              <span>🧮</span>
+              <span>${isCalc ? 'Calc ON' : 'Calc OFF'}</span>
+            </button>
+            <button 
+              class="btn btn-sm ${isRef ? 'btn-outline' : 'btn-secondary'}" 
+              style="font-size: 0.76rem; padding: 2px 8px; justify-content: flex-start; gap: 4px;"
+              title="Click to toggle Reference Sheet allowed"
+              onclick="toggleTool('${q.id}', 'referenceSheetAllowed', ${!isRef})"
+            >
+              <span>📐</span>
+              <span>${isRef ? 'Ref ON' : 'Ref OFF'}</span>
+            </button>
+          </div>
         </td>
         <td>
           <span class="badge ${isPub ? 'badge-status-active' : 'badge-status-inactive'}">
@@ -155,6 +196,73 @@ function renderQuestionsTable(questions, pagination) {
       `Page ${pagination.page} of ${pagination.totalPages || 1} (${pagination.total} questions)`;
     document.getElementById('admin-prev-btn').disabled = pagination.page <= 1;
     document.getElementById('admin-next-btn').disabled = pagination.page >= pagination.totalPages;
+  }
+
+  updateBulkBar();
+}
+
+function toggleSelectQuestion(id, checked) {
+  if (checked) selectedQuestions.add(id);
+  else selectedQuestions.delete(id);
+  updateBulkBar();
+}
+
+function updateBulkBar() {
+  const bar = document.getElementById('bulk-actions-bar');
+  const countSpan = document.getElementById('bulk-selected-count');
+  if (!bar) return;
+
+  const count = selectedQuestions.size;
+  if (count > 0) {
+    bar.style.display = 'flex';
+    if (countSpan) countSpan.textContent = `${count} question(s) selected`;
+  } else {
+    bar.style.display = 'none';
+  }
+
+  const selectAll = document.getElementById('select-all-q');
+  if (selectAll && currentQuestionsList.length > 0) {
+    selectAll.checked = currentQuestionsList.every(q => selectedQuestions.has(q.id));
+  }
+}
+
+function clearBulkSelection() {
+  selectedQuestions.clear();
+  const selectAll = document.getElementById('select-all-q');
+  if (selectAll) selectAll.checked = false;
+  document.querySelectorAll('.row-q-select').forEach(cb => cb.checked = false);
+  updateBulkBar();
+}
+
+async function toggleTool(questionId, toolKey, newValue) {
+  try {
+    const payload = {};
+    payload[toolKey] = newValue;
+    await API.patch(`/questions/${questionId}`, payload);
+    Toast.success('Question tool settings updated.');
+    loadAdminQuestions();
+  } catch (err) {
+    Toast.error(err.message || 'Failed to update tool setting.');
+  }
+}
+
+async function bulkSetTools(toolSettings) {
+  if (selectedQuestions.size === 0) {
+    Toast.info('Please select questions first.');
+    return;
+  }
+
+  const ids = Array.from(selectedQuestions);
+  try {
+    const res = await API.patch('/questions/bulk', {
+      questionIds: ids,
+      ...toolSettings
+    });
+    Toast.success(res.message || 'Bulk tool settings applied successfully.');
+    clearBulkSelection();
+    loadAdminQuestions();
+  } catch (err) {
+    Toast.error(err.message || 'Bulk update failed.');
   }
 }
 
@@ -213,3 +321,7 @@ function escapeHtml(str) {
 window.togglePublish = togglePublish;
 window.openDeleteModal = openDeleteModal;
 window.closeDeleteModal = closeDeleteModal;
+window.toggleTool = toggleTool;
+window.bulkSetTools = bulkSetTools;
+window.clearBulkSelection = clearBulkSelection;
+window.toggleSelectQuestion = toggleSelectQuestion;

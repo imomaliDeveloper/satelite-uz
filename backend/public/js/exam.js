@@ -12,6 +12,16 @@ let timerInterval = null;
 let remainingSeconds = 0;
 let examStartTime = 0;
 
+// Centralized SAT Exam State Management (Spec 92)
+window.examState = {
+  get currentQuestion() { return currentQuestionIndex; },
+  get answers() { return Object.fromEntries(userAnswers); },
+  get markedQuestions() { return Array.from(markedQuestions); },
+  get timeRemaining() { return remainingSeconds; },
+  get calculatorOpen() { return window.SatMathTools ? !!window.SatMathTools.dom?.calcContainer?.classList.contains('open') : false; },
+  get referenceSheetOpen() { return window.SatMathTools ? !!window.SatMathTools.dom?.refContainer?.classList.contains('open') : false; }
+};
+
 document.addEventListener('DOMContentLoaded', async () => {
   if (!Auth.requireAuth()) return;
   Auth.initNavbar();
@@ -189,6 +199,25 @@ function renderSimulatorQuestion() {
   } else {
     imgWrap.style.display = 'none';
   }
+  // Update Math Tools Permissions for this question (Specs 84, 94, 96)
+  const isCalcAllowed = (examSession?.calculatorAllowed !== false) && (q.calculatorAllowed !== false);
+  const isRefAllowed = (examSession?.referenceSheetAllowed !== false) && (q.referenceSheetAllowed !== false);
+
+  if (window.SatMathTools) {
+    SatMathTools.setPermissions({
+      calculatorAllowed: isCalcAllowed,
+      referenceSheetAllowed: isRefAllowed
+    });
+  }
+
+  const examCalcBtn = document.getElementById('exam-calc-btn');
+  const examRefBtn = document.getElementById('exam-ref-btn');
+  if (examCalcBtn) {
+    examCalcBtn.style.display = isCalcAllowed ? 'inline-flex' : 'none';
+  }
+  if (examRefBtn) {
+    examRefBtn.style.display = isRefAllowed ? 'inline-flex' : 'none';
+  }
 
   // Render options
   const selectedOptId = userAnswers.get(q.id);
@@ -338,6 +367,26 @@ function setupEventListeners() {
   document.getElementById('mark-review-btn').addEventListener('click', toggleMarkForReview);
   document.getElementById('submit-exam-trigger-btn').addEventListener('click', openSubmitModal);
   document.getElementById('confirm-submit-btn').addEventListener('click', () => submitExam(false));
+
+  const examCalcBtn = document.getElementById('exam-calc-btn');
+  if (examCalcBtn) {
+    examCalcBtn.addEventListener('click', () => {
+      if (window.SatMathTools) SatMathTools.toggleCalculator();
+    });
+  }
+
+  const examRefBtn = document.getElementById('exam-ref-btn');
+  if (examRefBtn) {
+    examRefBtn.addEventListener('click', () => {
+      if (window.SatMathTools) SatMathTools.toggleReferenceSheet();
+    });
+  }
+
+  window.addEventListener('satelite:tools_state_change', (e) => {
+    const detail = e.detail || {};
+    if (examCalcBtn) examCalcBtn.classList.toggle('active', !!detail.calculatorOpen);
+    if (examRefBtn) examRefBtn.classList.toggle('active', !!detail.referenceSheetOpen);
+  });
 
   const simContainer = document.getElementById('sim-options-container');
   if (simContainer) {

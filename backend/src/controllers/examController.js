@@ -44,6 +44,8 @@ export const listExams = async (req, res, next) => {
         durationMinutes: exam.durationMinutes,
         totalQuestions: exam._count.examQuestions,
         isPublished: exam.isPublished,
+        calculatorAllowed: exam.calculatorAllowed,
+        referenceSheetAllowed: exam.referenceSheetAllowed,
         createdAt: exam.createdAt,
         updatedAt: exam.updatedAt,
         attemptsCount: exam._count.practiceSessions,
@@ -123,6 +125,8 @@ export const getExamById = async (req, res, next) => {
         durationMinutes: exam.durationMinutes,
         totalQuestions: formattedQuestions.length,
         isPublished: exam.isPublished,
+        calculatorAllowed: exam.calculatorAllowed,
+        referenceSheetAllowed: exam.referenceSheetAllowed,
         createdAt: exam.createdAt,
         questions: formattedQuestions
       }
@@ -134,7 +138,7 @@ export const getExamById = async (req, res, next) => {
 
 export const createExam = async (req, res, next) => {
   try {
-    const { title, description, durationMinutes, isPublished, questionIds } = req.body;
+    const { title, description, durationMinutes, isPublished, calculatorAllowed, referenceSheetAllowed, questionIds } = req.body;
 
     if (!questionIds || !Array.isArray(questionIds) || questionIds.length === 0) {
       return res.status(400).json({
@@ -151,6 +155,8 @@ export const createExam = async (req, res, next) => {
         durationMinutes: durationMinutes || 60,
         totalQuestions: questionIds.length,
         isPublished: isPublished !== undefined ? isPublished : true,
+        calculatorAllowed: calculatorAllowed === undefined ? true : (calculatorAllowed === true || calculatorAllowed === 'true'),
+        referenceSheetAllowed: referenceSheetAllowed === undefined ? true : (referenceSheetAllowed === true || referenceSheetAllowed === 'true'),
         examQuestions: {
           create: questionIds.map((qId, index) => ({
             questionId: qId,
@@ -180,7 +186,7 @@ export const createExam = async (req, res, next) => {
 export const updateExam = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { title, description, durationMinutes, isPublished, questionIds } = req.body;
+    const { title, description, durationMinutes, isPublished, calculatorAllowed, referenceSheetAllowed, questionIds } = req.body;
 
     const existing = await prisma.exam.findUnique({ where: { id } });
     if (!existing) {
@@ -210,6 +216,8 @@ export const updateExam = async (req, res, next) => {
           ...(description !== undefined ? { description } : {}),
           ...(durationMinutes ? { durationMinutes } : {}),
           ...(isPublished !== undefined ? { isPublished } : {}),
+          ...(calculatorAllowed !== undefined ? { calculatorAllowed: calculatorAllowed === true || calculatorAllowed === 'true' } : {}),
+          ...(referenceSheetAllowed !== undefined ? { referenceSheetAllowed: referenceSheetAllowed === true || referenceSheetAllowed === 'true' } : {}),
           ...(questionIds ? { totalQuestions: questionIds.length } : {})
         },
         include: {
