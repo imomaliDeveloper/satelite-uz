@@ -36,6 +36,18 @@ export async function ensureDbColumns(force = false) {
       }
       dbSynced = true;
       console.log('[Database] Verified math tool columns in Exam and Question tables.');
+
+      // Check if questions need seeding
+      try {
+        const qCount = await prisma.question.count();
+        if (qCount < 20) {
+          console.log(`[Database] Found ${qCount} questions, auto-seeding expanded SAT question bank...`);
+          const { seedExpandedQuestions } = await import('../utils/seedQuestions.js');
+          await seedExpandedQuestions();
+        }
+      } catch (seedErr) {
+        console.warn('[Database] Auto-seed notice:', seedErr?.message || seedErr);
+      }
     } catch (err) {
       console.warn('[Database] Column verification notice:', err?.message || err);
       dbSynced = true;

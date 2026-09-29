@@ -77,6 +77,26 @@ function setupListeners() {
   });
 
   document.getElementById('confirm-delete-btn').addEventListener('click', deleteQuestionConfirmed);
+
+  const seedBtn = document.getElementById('admin-seed-bank-btn');
+  if (seedBtn) {
+    seedBtn.addEventListener('click', async () => {
+      if (!confirm('Populate the Question Bank with 40+ authentic Digital SAT Math and Reading & Writing questions? (Duplicates will be safely skipped)')) return;
+      seedBtn.disabled = true;
+      seedBtn.textContent = '⏳ Seeding...';
+      try {
+        const res = await API.post('/admin/seed-questions');
+        showToast(res.message || 'Questions seeded successfully!', 'success');
+        currentPage = 1;
+        loadAdminQuestions();
+      } catch (err) {
+        showToast(err.message || 'Failed to seed questions.', 'error');
+      } finally {
+        seedBtn.disabled = false;
+        seedBtn.textContent = '🌱 Seed SAT Bank';
+      }
+    });
+  }
 }
 
 async function loadAdminQuestions() {

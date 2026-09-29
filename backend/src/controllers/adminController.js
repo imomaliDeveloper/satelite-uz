@@ -204,3 +204,17 @@ export const getAdminAnalytics = async (req, res, next) => {
     next(error);
   }
 };
+
+export const seedQuestionsHandler = async (req, res, next) => {
+  try {
+    const { seedExpandedQuestions } = await import('../utils/seedQuestions.js');
+    const result = await seedExpandedQuestions();
+    res.json({
+      success: true,
+      message: `Successfully seeded questions! Added: ${result.added}, Total in bank: ${result.total}.`,
+      data: result
+    });
+  } catch (error) {
+    next(error);
+  }
+};

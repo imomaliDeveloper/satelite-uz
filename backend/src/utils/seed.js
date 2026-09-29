@@ -1,5 +1,6 @@
 import prisma from '../config/db.js';
 import { hashPassword } from './jwt.js';
+import { seedExpandedQuestions } from './seedQuestions.js';
 
 async function main() {
   console.log('🚀 [SATELITE.UZ] Seeding database...');
@@ -436,7 +437,11 @@ async function main() {
     }
   }
 
-  console.log(`✔ ${createdQuestions.length} Sample questions seeded in question bank.`);
+  console.log(`✔ ${createdQuestions.length} Initial sample questions processed.`);
+
+  // Seed expanded collection of authentic SAT questions
+  const expandedRes = await seedExpandedQuestions();
+  console.log(`✔ Seeded expanded questions: +${expandedRes.added} new questions added.`);
 
   // 5. Seed Official Sample Exams
   const sampleExam1 = await prisma.exam.upsert({
