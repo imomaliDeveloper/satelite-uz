@@ -129,7 +129,7 @@ export async function runInitDb() {
         createdById: admin.id,
         options: {
           create: [
-            { optionLabel: 'A', optionText: '25', isCorrect: true, explanation: 'Correct. x = 5, 6(5) - 5 = 25.' },
+            { optionLabel: 'A', optionText: '25', isCorrect: true },
             { optionLabel: 'B', optionText: '15', isCorrect: false },
             { optionLabel: 'C', optionText: '30', isCorrect: false },
             { optionLabel: 'D', optionText: '35', isCorrect: false }
@@ -149,7 +149,7 @@ export async function runInitDb() {
         createdById: admin.id,
         options: {
           create: [
-            { optionLabel: 'A', optionText: '10', isCorrect: true, explanation: 'Correct: sqrt(36 + 64) = 10.' },
+            { optionLabel: 'A', optionText: '10', isCorrect: true },
             { optionLabel: 'B', optionText: '14', isCorrect: false },
             { optionLabel: 'C', optionText: '12', isCorrect: false },
             { optionLabel: 'D', optionText: '48', isCorrect: false }
