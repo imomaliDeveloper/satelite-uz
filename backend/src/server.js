@@ -108,22 +108,9 @@ app.get('/api/setup/sync-database', async (req, res) => {
     return res.status(403).json({ error: 'Secret required' });
   }
   try {
-    const { execSync } = await import('child_process');
-    const rootDir = path.resolve(__dirname, '../..');
-    const push = execSync('npx prisma db push --schema=backend/prisma/schema.prisma --accept-data-loss', {
-      cwd: rootDir,
-      env: process.env
-    }).toString();
-    let seed = '';
-    try {
-      seed = execSync('node backend/src/utils/seed.js', {
-        cwd: rootDir,
-        env: process.env
-      }).toString();
-    } catch (sErr) {
-      seed = sErr.message;
-    }
-    return res.json({ success: true, push, seed });
+    const { runInitDb } = await import('./utils/initDb.js');
+    const result = await runInitDb();
+    return res.json({ success: true, ...result });
   } catch (err) {
     return res.status(500).json({ success: false, error: err.message, stack: err.stack });
   }
