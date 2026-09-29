@@ -129,10 +129,10 @@ export async function runInitDb() {
         createdById: admin.id,
         options: {
           create: [
-            { optionText: '25', isCorrect: true, explanation: 'Correct. x = 5, 6(5) - 5 = 25.' },
-            { optionText: '15', isCorrect: false },
-            { optionText: '30', isCorrect: false },
-            { optionText: '35', isCorrect: false }
+            { optionLabel: 'A', optionText: '25', isCorrect: true, explanation: 'Correct. x = 5, 6(5) - 5 = 25.' },
+            { optionLabel: 'B', optionText: '15', isCorrect: false },
+            { optionLabel: 'C', optionText: '30', isCorrect: false },
+            { optionLabel: 'D', optionText: '35', isCorrect: false }
           ]
         }
       }
@@ -149,10 +149,10 @@ export async function runInitDb() {
         createdById: admin.id,
         options: {
           create: [
-            { optionText: '10', isCorrect: true, explanation: 'Correct: sqrt(36 + 64) = 10.' },
-            { optionText: '14', isCorrect: false },
-            { optionText: '12', isCorrect: false },
-            { optionText: '48', isCorrect: false }
+            { optionLabel: 'A', optionText: '10', isCorrect: true, explanation: 'Correct: sqrt(36 + 64) = 10.' },
+            { optionLabel: 'B', optionText: '14', isCorrect: false },
+            { optionLabel: 'C', optionText: '12', isCorrect: false },
+            { optionLabel: 'D', optionText: '48', isCorrect: false }
           ]
         }
       }
@@ -169,10 +169,10 @@ export async function runInitDb() {
         createdById: admin.id,
         options: {
           create: [
-            { optionText: 'It introduces experimental evidence supporting the hypothesis.', isCorrect: true },
-            { optionText: 'It contradicts the previous claim.', isCorrect: false },
-            { optionText: 'It defines a technical term.', isCorrect: false },
-            { optionText: 'It raises an unanswered question.', isCorrect: false }
+            { optionLabel: 'A', optionText: 'It introduces experimental evidence supporting the hypothesis.', isCorrect: true },
+            { optionLabel: 'B', optionText: 'It contradicts the previous claim.', isCorrect: false },
+            { optionLabel: 'C', optionText: 'It defines a technical term.', isCorrect: false },
+            { optionLabel: 'D', optionText: 'It raises an unanswered question.', isCorrect: false }
           ]
         }
       }
