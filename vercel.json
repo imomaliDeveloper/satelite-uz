@@ -1,6 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "cd backend && npm install && npm run prisma:generate",
+  "outputDirectory": "frontend",
+  "buildCommand": "node backend/prisma/prepare-db.js && prisma generate --schema=backend/prisma/schema.prisma",
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -13,10 +14,6 @@
     {
       "source": "/api-docs",
       "destination": "/api/index.js"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/frontend/$1"
     }
   ]
 }
